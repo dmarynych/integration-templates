@@ -1,0 +1,62 @@
+data:
+- attributes:
+    destination_override_endpoint: 'https://echo.apps.verygood.systems'
+    entries:
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values: [/post]
+          rules: null
+        - condition: null
+          expression:
+            field: ContentType
+            operator: equals
+            type: string
+            values: [application/json]
+          rules: null
+      id_selector: null
+      operation: REDACT
+      operations: null
+      phase: REQUEST
+      public_token_generator: UUID
+      targets: [body]
+      token_manager: VOLATILE
+      transformer: JSON_PATH
+      transformer_config: [$.cvv]
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values: [/post]
+          rules: null
+      id_selector: null
+      operation: REDACT
+      operations: null
+      phase: REQUEST
+      public_token_generator: FPE_SIX_T_FOUR
+      targets: [body]
+      token_manager: PERSISTENT
+      transformer: JSON_PATH
+      transformer_config: [$.card]
+      transformer_config_map: null
+    host_endpoint: (.*)\.verygoodproxy\.com
+    port: 80
+    protocol: http
+    source_endpoint: '*'
+    updated_at: '2018-10-31T15:37:33'
+  type: rule_chain
+version: 1
