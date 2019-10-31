@@ -1,0 +1,125 @@
+data:
+- attributes:
+    destination_override_endpoint: https://echo.apps.verygood.systems
+    entries:
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values: [/post]
+          rules: null
+        - condition: null
+          expression:
+            field: ContentType
+            operator: equals
+            type: string
+            values: [application/json]
+          rules: null
+      id: 1f767449-85bf-48f6-b059-3ab50c41e1ef
+      id_selector: null
+      operation: REDACT
+      operations: null
+      phase: REQUEST
+      public_token_generator: UUID
+      targets: [body]
+      token_manager: VOLATILE
+      transformer: JSON_PATH
+      transformer_config: [$.cvv]
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values: [/post]
+          rules: null
+      id: f389276b-6532-47df-905a-f776018c7cc0
+      id_selector: null
+      operation: REDACT
+      operations: null
+      phase: REQUEST
+      public_token_generator: FPE_SIX_T_FOUR
+      targets: [body]
+      token_manager: PERSISTENT
+      transformer: JSON_PATH
+      transformer_config: [$.card]
+      transformer_config_map: null
+    host_endpoint: (.*)\.verygoodproxy\.com
+    id: 00000000-0000-0000-0000-000000000121
+    ordinal: null
+    port: 80
+    protocol: http
+    source_endpoint: '*'
+    tags: {name: visa direct inbound}
+  id: 00000000-0000-0000-0000-000000000121
+  type: rule_chain
+- attributes:
+    destination_override_endpoint: '*'
+    entries:
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values: [/visadirect/fundstransfer/v1/pullfundstransactions]
+          rules: null
+      id: 3de97c02-d1fd-4118-9471-b3bfaa2dfaf8
+      id_selector: null
+      operation: ENRICH
+      operations: null
+      phase: REQUEST
+      public_token_generator: UUID
+      targets: [body]
+      token_manager: VOLATILE
+      transformer: JSON_PATH
+      transformer_config: [$.cardCvv2Value]
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values: [/visadirect/fundstransfer/v1/pullfundstransactions]
+          rules: null
+      id: 15262fdf-501b-4b28-8241-bece89dd42d3
+      id_selector: null
+      operation: ENRICH
+      operations: null
+      phase: REQUEST
+      public_token_generator: FPE_SIX_T_FOUR
+      targets: [body]
+      token_manager: PERSISTENT
+      transformer: JSON_PATH
+      transformer_config: [$.senderPrimaryAccountNumber]
+      transformer_config_map: null
+    host_endpoint: sandbox\.api\.visa\.com
+    id: 00000000-0000-0000-0000-000000000123
+    ordinal: null
+    port: 80
+    protocol: http
+    source_endpoint: '*'
+    tags: {name: visa direct outbound}
+  id: 00000000-0000-0000-0000-000000000123
+  type: rule_chain
+version: 1
