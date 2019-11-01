@@ -83,7 +83,7 @@ const check = async () => {
   }).then(res => res.json()).then((r) => {
     card_number_token = _.get(r, 'json.card');
     card_cvv_token = _.get(r, 'json.cvv');
-    console.log('card number and cvv successfully replaced with alias');
+    console.log('card number and cvv successfully replaced with aliases');
     console.log({
       card_number: card_number_token,
       card_cvv: card_cvv_token,
