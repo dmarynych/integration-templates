@@ -55,7 +55,7 @@ data:
       transformer: JSON_PATH
       transformer_config: [$.card]
       transformer_config_map: null
-    host_endpoint: (.*)\.verygoodproxy\.com
+    host_endpoint: (.*)\.verygoodproxy\.io
     id: 00000000-0000-0000-0000-000000000121
     ordinal: null
     port: 80
