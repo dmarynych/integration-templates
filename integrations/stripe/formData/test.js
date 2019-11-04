@@ -18,7 +18,7 @@ if(!process.env.tennantId) {
   return;
 }
 if(!process.env.stripeSecret) {
-  process.env.stripeSecret = stripeConfig.stripeSecret;
+  process.env.stripeSecret = stripeConfig.secret_key;
 }
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
