@@ -1,84 +1,52 @@
-const _ = require('lodash');
-const https = require('https'); // should be here for RunKit
-const HttpsProxyAgent = require('https-proxy-agent');
-const fetch = require('node-fetch');
-const { URLSearchParams } = require('url');
+const testRunner = require('../../../src/utils/test-runner');
 const stripeConfig = require('./../config');
 
-if (!process.env.username) {
-  console.log('Missing username, aborting');
-  return;
-}
-if(!process.env.password) {
-  console.log('Missing password, aborting');
-  return;
-}
-if(!process.env.tennantId) {
-  console.log('Missing tennantId, aborting');
-  return;
-}
-if(!process.env.stripeSecret) {
-  process.env.stripeSecret = stripeConfig.secret_key;
-}
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-const agent = new HttpsProxyAgent(`http://${process.env.username}:${process.env.password}@${process.env.tennantId}.sandbox.verygoodproxy.io:8080`);
-
-const stripeInboundUrl = `https://${process.env.tennantId}.SANDBOX.verygoodproxy.io/post`;
-
-const stripeOutboundUrl = 'https://api.stripe.com/v1/tokens';
-
-let card_number_token = '';
-let card_cvc_token = '';
-
-const initialData = {
-  card_name: 'John Doe',
-  card_number: '4111111111111111',
-  card_cvc: '344',
-  card_expirationDate: '01 / 2022',
-}
-
 const check = async () => {
+  testRunner.configRunner({
+    config: stripeConfig,
+  })
+
   // should send inbound and get response from echo
-  console.log('sending initial test data to proxy', initialData);
-  fetch(stripeInboundUrl, {
+  const inboundRequestParams = {
     method: 'POST',
     headers: { 'Content-type': 'application/json' },
-    body: JSON.stringify(initialData),
-  }).then(res => res.json()).then((r) => {
-    card_number_token = _.get(r, 'json.card_number');
-    card_cvc_token = _.get(r, 'json.card_cvc');
-    console.log('card number and cvc successfully replaced with aliases');
-    console.log({
-      ...initialData,
-      card_number: card_number_token,
-      card_cvc: card_cvc_token,
-    })
-
-    const params = new URLSearchParams();
-    params.append('card[number]', card_number_token);
-    params.append('card[exp_month]', 12);
-    params.append('card[exp_year]', 2020);
-    params.append('card[cvc]', card_cvc_token);
-
-    // should send outbound and get response from stripe
-    console.log('sending redacted test data from proxy to stripe API');
-    fetch(stripeOutboundUrl, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/x-www-form-urlencoded',
-        'Authorization': `Bearer ${process.env.stripeSecret}`,
+    body: {
+      type: 'json',
+      value: {
+        card_name: 'John Doe',
+        card_expirationDate: '01 / 2022',
+        card_number: '4111111111111111',
+        card_cvc: '344',
       },
-      body: params,
-      agent: agent,
-    }).then((r) => {
-      if (r.status === 200) {
-        console.log('response.status === 200, outbound request successful');
-      } else {
-        console.log(r, ' - outbound failed');
-      }
-    });
-  });
+    },
+  };
+  const inboundResult = await testRunner.sendInbound(inboundRequestParams);
+
+  console.log(' -------- inboundResult -------- ');
+  console.log(await inboundResult.data);
+
+  // should send redacted test data from proxy to 3rd party API
+  const outboundRequestParams = {
+    url: 'https://api.stripe.com/v1/tokens',
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/x-www-form-urlencoded',
+      'Authorization': `Bearer ${process.env.secret_key || stripeConfig.secret_key}`,
+    },
+    body: {
+      type: 'formData',
+      value: {
+        'card[number]': JSON.parse(inboundResult.data).card_number,
+        'card[cvc]': JSON.parse(inboundResult.data).card_cvc,
+        'card[exp_month]': 12,
+        'card[exp_year]': 2020,
+      },
+    },
+  };
+  const outboundResult = await testRunner.sendOutbound(outboundRequestParams);
+
+  console.log(' -------- outboundResult -------- ');
+  console.log('response status - ', await outboundResult.status);
 };
 
 module.exports = check;
