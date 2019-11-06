@@ -4,16 +4,19 @@
   "version": "0.1.0",
   "scripts": {
     "auth-dev": "vgs --environment=dev authenticate",
-    "auth": "vgs authenticate"
+    "auth": "vgs authenticate",
+    "postinstall": "chmod +x ./vgs"
   },
   "dependencies": {
     "axios": "^0.18.0",
     "axios-https-proxy-fix": "^0.17.1",
+    "commander": "^4.0.0",
     "deep-diff": "^1.0.2",
     "https": "^1.0.0",
     "https-proxy-agent": "^2.2.4",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.14",
+    "ncp": "^2.0.0",
     "node-fetch": "^2.6.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
