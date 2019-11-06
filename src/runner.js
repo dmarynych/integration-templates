@@ -3,11 +3,12 @@ const yamlUtil = require('./utils/yaml');
 const cmn = require('./utils/common');
 const testRunner = require('./utils/test-runner');
 
-const tryToRun = (integrationList, requestedIntegration, requestedIntegrationVersion) => {
+const tryToRun = (requestedIntegration, requestedIntegrationVersion) => {
   const creds = cmn.getCredentials();
   if (!cmn.checkIntegrationAndVersion(requestedIntegration, requestedIntegrationVersion)) return;
 
   if (requestedIntegration && requestedIntegrationVersion) {
+    const integrationList = cmn.getIntegrationList();
     console.log('perform run test for ', requestedIntegration, requestedIntegrationVersion);
     process.env.username = creds.username;
     process.env.password = creds.password;
