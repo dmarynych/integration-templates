@@ -1,3 +1,4 @@
+const path = require("path");
 const fs = require('fs');
 
 const integrationRootDir = process.env.PWD+'/integrations/';
@@ -49,6 +50,28 @@ const checkIntegrationAndVersion = (requestedIntegration, requestedIntegrationVe
   return true;
 }
 
+const clearDumpFiles = () => {
+  fs.writeFileSync(
+    `${process.env.PWD}/stuff/modified_dump.yaml`,
+    '',
+    { encoding: 'utf8' },
+  );
+  fs.writeFileSync(
+    `${process.env.PWD}/stuff/dump.yaml`,
+    '',
+    { encoding: 'utf8' },
+  );
+}
+
+const getConfig = (requestedIntegration) => {
+  const config = JSON.parse(fs.readFileSync(`${integrationRootDir}${requestedIntegration}/config.json`));
+  for (const variable in config) {
+    if(config.hasOwnProperty(variable)) {
+      process.env[variable] = config[variable];
+    }
+  }
+}
+
 const setCredentials = () => {
   const credsList = [];
   fs.readdirSync(credsRootDir, { withFileTypes: true })
@@ -72,10 +95,14 @@ function getCredentials () {
   return JSON.parse(crdsFile);
 }
 
+// TODO set creds for tennant, check is there creds file with input tennant
+
 module.exports = {
   getIntegrationList,
   getProxyType,
   checkIntegrationAndVersion,
+  clearDumpFiles,
+  getConfig,
   setCredentials,
   getCredentials,
 }
