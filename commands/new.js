@@ -3,7 +3,7 @@ const fs = require('fs');
 
 
 module.exports = (name, version, program) => {
-  console.log('new', name, version);
+  console.log('creating new integration', name, version);
 
   const mainDir = `integrations/${name}`;
   const versionDir = `integrations/${name}/${version}`;
@@ -12,15 +12,12 @@ module.exports = (name, version, program) => {
   const isVersionExists = fs.existsSync(versionDir);
 
   if (!isMainExists) {
-    console.log('creating new');
     copyNew(name, version);
   }
 
   if (!isVersionExists) {
-    console.log('creating version');
     copyVersion(name, version);
   }
-  console.log(mainDir, isMainExists, versionDir, isVersionExists);
 }
 
 function copyNew(name) {
@@ -35,6 +32,6 @@ function copyVersion(name, version) {
     if (err) {
       return console.error(err);
     }
-    console.log('done!');
+    console.log(`Integration {name} is created! Go to ${destination} folder and check it.`);
   });
 }
