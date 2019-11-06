@@ -46,20 +46,17 @@ program
   .command('dump')
   .description('Dump routes, using creds file "stuff/credentials/creds.json"')
   .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "prod"')
-  .requiredOption('-t, --environment <environment>', 'VGS environment, might be "dev", "prod"')
-
-  .action(() => {
-    vgsCli.runDump(program.environment);
+  // .requiredOption('-t, --environment <environment>', 'VGS environment, might be "dev", "prod"')
+  .action((cmd) => {
+    vgsCli.runDump(cmd.environment);
   });
 
 program
   .command('auth')
   .description('Auth on VGS')
   .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "prod"')
-  .action(() => {
-    console.log('program.environment', program);
-    
-    vgsCli.runAuth(program.environment);
+  .action((cmd) => {
+    vgsCli.runAuth(cmd.environment);
   });
 
 
