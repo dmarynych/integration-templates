@@ -14,7 +14,7 @@ switch (command) {
     runner.runDumpAndSync(requestedIntegration, requestedIntegrationVersion);
     return;
   case 'test':
-    runner.tryToRun(integrationList, requestedIntegration, requestedIntegrationVersion);
+    runner.tryToRun(requestedIntegration, requestedIntegrationVersion);
     return;
   case 'auth':
     vgsCli.runAuth();

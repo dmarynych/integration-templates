@@ -5,7 +5,7 @@
   "scripts": {
     "auth-dev": "vgs --environment=dev authenticate",
     "auth": "vgs authenticate",
-    "postinstall": "chmod +x ./vgs"
+    "postinstall": "chmod +x ./tool"
   },
   "dependencies": {
     "axios": "^0.18.0",

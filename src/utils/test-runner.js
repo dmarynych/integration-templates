@@ -110,8 +110,9 @@ const payloadHelper = {
     return payload;
   },
   json: function (rawData/* {} */) {
+    // return ;
     const payload = {
-      body: JSON.stringify({}),
+      body: JSON.stringify(rawData), //JSON.stringify({}),
       add: function (field/*: [label, value]*/) {
         let parsed = JSON.parse(this.body);
         this.body = JSON.stringify({
@@ -144,7 +145,7 @@ const payloadHelper = {
       },
     }
 
-    if (rawData) deepSet(rawData, payload, payload.add);
+    // if (rawData) deepSet(rawData, payload, payload.add);
 
     return payload;
   },

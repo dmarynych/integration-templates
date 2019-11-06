@@ -46,7 +46,9 @@ const check = async () => {
   const outboundResult = await testRunner.sendOutbound(outboundRequestParams);
 
   console.log(' -------- outboundResult -------- ');
-  console.log('response status - ', await outboundResult.status);
+  console.log('response status - ', outboundResult.status);
+  console.log('response text - ', outboundResult.statusText);
+  console.log('response body - ', await outboundResult.text());
 };
 
 module.exports = check;

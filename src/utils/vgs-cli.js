@@ -9,8 +9,12 @@ const runDump = (cb) => {
       return;
     }
 
-    console.log(`stdout: ${stdout}`);
-    console.log(`stderr: ${stderr}`);
+    if(stderr) {
+      console.log('error', stderr);
+    } else {
+      console.log('Success!');
+      console.log(`Route configs from ${creds.tennantId} saved to stuff/dump.yaml`);
+    }
     if (cb) cb();
   });
 }
