@@ -1,6 +1,7 @@
 const vgsCli = require('./utils/vgs-cli');
 const yamlUtil = require('./utils/yaml');
 const cmn = require('./utils/common');
+const testRunner = require('./utils/test-runner');
 
 const tryToRun = (integrationList, requestedIntegration, requestedIntegrationVersion) => {
   const creds = cmn.getCredentials();
@@ -12,16 +13,20 @@ const tryToRun = (integrationList, requestedIntegration, requestedIntegrationVer
     process.env.password = creds.password;
     process.env.tennantId = creds.tennantId;
 
+    // get config file and pass inners to process.env
+    cmn.getConfig(requestedIntegration, requestedIntegrationVersion);
+
     const requestedTest = require(integrationList[requestedIntegration].versions[requestedIntegrationVersion].path + '/test');
 
     requestedTest();
   }
 }
 
-const runDumpAndSync = (requestedIntegration, requestedIntegrationVersion) => {
+const runDumpAndSync = async (requestedIntegration, requestedIntegrationVersion) => {
+  cmn.clearDumpFiles();
   if (!cmn.checkIntegrationAndVersion(requestedIntegration, requestedIntegrationVersion)) return;
-
-  vgsCli.runDump(yamlUtil.getYamlFile(requestedIntegration, requestedIntegrationVersion));
+  await vgsCli.async_runDump();
+  yamlUtil.getYamlFile(requestedIntegration, requestedIntegrationVersion);
 };
 
 module.exports = {
