@@ -2,7 +2,7 @@
 
 
 ## Installing
-- clone this `integration-templates` repo
+- clone this repo
 ```
 git clone git@github.com:verygoodsecurity/integration-templates.git
 cd integration-templates
@@ -18,18 +18,50 @@ npm install
 
 ## Create a new integration
 
-Run a command below:
+
+First, add credentials from your vault to `credentials/creds.json`, it should look like this:
 ```
-./vgs new stripe json
+{
+  "username": "",
+  "password": "",
+  "tennantId": ""
+}
 ```
+
+---
+
+Then, authenticate:
+```
+./vgs auth -e dev
+
+```
+
+---
+
+Then, run a command below:
+```
+./vgs new <integration> <version>
+
+```
+for example `./vgs new stripe formData`
+
 It will create a new folder with integration templates under `integrations` folder
 
+---
+Then change route config file form here `integrations/<integration>/<version>/dump.yaml`.
+When you ready, apply changes by running:
+```
+./vgs apply <integration> <version>
+```
+for example `./vgs apply stripe formData`
 
-node tool auth or auth-dev
-put file with credentials to /stuff/credentials dir
-node tool set-creds
+---
 
-node tool apply selected integration
-node tool test selected integration
+Then add some code to a test file here `integrations/<integration>/<version>/test.js`.
+When you ready - run test:
+```
+./vgs test stripe json
+```
+for example `./vgs apply stripe formData`
 
 ## Troubleshooting

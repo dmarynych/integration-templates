@@ -11,7 +11,7 @@ data:
      public_token_generator: UUID
      transformer: JSON_PATH
      transformer_config:
-      - $.account_number
+      - $.ssn
      transformer_config_map: null
      operations: null
      targets:
@@ -64,9 +64,9 @@ data:
      operation: ENRICH
      token_manager: PERSISTENT
      public_token_generator: UUID
-     transformer: JSON_PATH
+     transformer: FORM_FIELD
      transformer_config:
-      - $.account_number
+      - ssn
      transformer_config_map: null
      operations: null
      targets:
@@ -85,20 +85,9 @@ data:
          field: PathInfo
          type: string
          operator: matches
-         values: [/post]
-       -
-        operator: equals
-        type: string
-        value: application/json
-        field: ContentType
-        condition: null
-        expression:
-         field: ContentType
-         type: string
-         operator: equals
-         values: [application/json]
+         values: [/v1/candidates]
       condition: AND
-   host_endpoint: echo\.apps\.verygood\.systems
+   host_endpoint: api\.checkr\.com
    id: f3f7af03-4209-4d13-9b98-625096cfedb7
    ordinal: null
    port: 80

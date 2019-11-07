@@ -33,9 +33,12 @@ const sendInbound = async (config) => {
     console.log(' -------- inboundResult -------- ');
     console.log('inbound status - ', response.status);
     console.log('inbound text - ', response.statusText);
-    console.log('inbound body - ', await response.text());
+    console.log('h', response.headers['content-type']);
+    
+    const resp = await response.json();
+    console.log('inbound body - ', resp);
 
-    return await response.json();
+    return resp;
   } catch (error) {
     console.log('Smth went wrong', error);
     return error;
@@ -55,10 +58,12 @@ const sendOutbound = async (config) => {
     console.log('response status - ', response.status);
     console.log('response text - ', response.statusText);
     // console.log('response body - ', await response.text());
-    const json = await response.json();
-    console.log('response json - ', json);
+    console.log('hh', response.headers['content-type']);
+    
+    const resp = response.headers['content-type'] === 'application/json' ? await response.json() : await response.text();
+    console.log('response json - ', resp);
 
-    return await json;
+    return resp;
   } catch (error) {
     console.log('Smth went wrong', error);
     return error;
