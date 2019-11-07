@@ -13,9 +13,9 @@ program
   .option('-d, --debug', 'output extra debugging');
 
 program
-  .command('new <name> <version>')
+  .command('new <name> [version]')
   .description('Create a new template. For example "new visa v1" to kickstart new integration')
-  .action((name, version) => {
+  .action((name, version = 'default') => {
     newCommand(name, version, program);
   });
 
