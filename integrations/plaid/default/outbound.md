@@ -1,5 +1,4 @@
-Send form card data via card[cvc] and card[number] to Stripe API.
-https://stripe.com/docs/api/tokens/create_card
+Collect account numbers using Plaid auth API. https://plaid.com/docs/#auth
 
-- Reveal the Form field entries card[cvc] in the request targets: body
-- Reveal the Form field entries card[number] in the request targets: body
+Redact the `$.numbers.ach[*].account` in the response targets: body (for US account numbers)
+Redact the `$.numbers.eft[*].account` in the response targets: body (for Canadian account numbers)

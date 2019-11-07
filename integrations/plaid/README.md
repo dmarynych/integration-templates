@@ -1,1 +1,1 @@
-Utilize Stripe's APIs without storing payment card data.
+Utilize Plaid's APIs without storing account numbers.
