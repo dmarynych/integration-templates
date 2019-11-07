@@ -86,8 +86,6 @@ const parseYamlDump = async (dump, tplDump) => {
   if (result.dumpInbound || result.inbound) {
     alt_result.data.push(await inboundWorker(result.dumpInbound, result.inbound));
   }
-  // TODO: add try catch
-  console.log(123);
   
   return jsyaml.safeDump(alt_result);
 }

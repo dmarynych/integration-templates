@@ -1,1 +1,1 @@
-Utilize Stripe's APIs without storing payment card data.
+Utilize Checkr's APIs without storing PII data.
