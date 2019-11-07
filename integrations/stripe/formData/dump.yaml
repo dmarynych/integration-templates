@@ -124,14 +124,14 @@ data:
       transformer_config: [$.card_cvc]
       transformer_config_map: null
     host_endpoint: (.*).verygoodproxy.io
-    id: 00000000-0000-0000-0000-000000043232
+    id: 00000000-0000-0000-0000-000000043242
     ordinal: null
     port: 0
     protocol: http
     source_endpoint: '*'
-    tags: {name: 'https://echo.apps.verygood.systems-medium-sea-green-croissant'}
+    tags: {name: 'https://echo.apps.verygood.systems-medium-sea-white-croissant'}
     updated_at: '2019-10-01T16:50:09'
-  id: 00000000-0000-0000-0000-000000043232
+  id: 00000000-0000-0000-0000-000000043242
   type: rule_chain
 version: 1
 
