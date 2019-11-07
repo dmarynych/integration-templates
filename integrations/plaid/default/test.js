@@ -1,3 +1,5 @@
+const assert = require('assert');
+
 const check = async () => {
   global.testRunner.configRunner();
 
@@ -18,7 +20,10 @@ const check = async () => {
     },
     body: JSON.stringify(outboundPayload)
   };
-  const outboundResult = await global.testRunner.sendOutbound(outboundRequestParams)
+  const outboundResult = await global.testRunner.sendOutbound(outboundRequestParams);
+
+  const token = outboundResult.numbers.ach[0].account
+  assert.notEqual(1111222233330000, token);
 };
 
 module.exports = check;

@@ -12,9 +12,6 @@ const check = async () => {
   };
   const inboundResult = await global.testRunner.sendInbound(inboundRequestParams);
 
-  console.log(' -------- inboundResult -------- ');
-  console.log(await inboundResult.data);
-
   // should send redacted test data from proxy to 3rd party API
   const outboundRequestParams = {
     url: 'https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pullfundstransactions',
@@ -59,9 +56,6 @@ const check = async () => {
     }),
   };
   const outboundResult = await global.testRunner.sendOutbound(outboundRequestParams);
-
-  console.log(' -------- outboundResult -------- ');
-  console.log('response status - ', await outboundResult.status);
 };
 
 module.exports = check;

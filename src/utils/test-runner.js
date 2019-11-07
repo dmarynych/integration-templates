@@ -54,9 +54,11 @@ const sendOutbound = async (config) => {
     console.log(' -------- outboundResult -------- ');
     console.log('response status - ', response.status);
     console.log('response text - ', response.statusText);
-    console.log('response body - ', await response.text());
+    // console.log('response body - ', await response.text());
+    const json = await response.json();
+    console.log('response json - ', json);
 
-    return response;
+    return await json;
   } catch (error) {
     console.log('Smth went wrong', error);
     return error;
