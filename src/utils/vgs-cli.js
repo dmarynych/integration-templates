@@ -11,7 +11,6 @@ const async_runDump = async () => {
     console.log('error', stderr);
   } else {
     console.log('Success!');
-    console.log(`Route configs from ${creds.tennantId} saved to stuff/dump.yaml`);
   }
 }
 
@@ -27,24 +26,25 @@ const runDump = () => {
       console.log('error', stderr);
     } else {
       console.log('Success!');
-      console.log(`Route configs from ${creds.tennantId} saved to stuff/dump.yaml`);
     }
   });
 }
 
 const runSync = (tplsDumpPath) => {
   const creds = cmn.getCredentials();
-  exec(`vgs --environment=dev --tenant=${creds.tennantId} route --sync-all < ${tplsDumpPath}`, (err, stdout, stderr) => {
+  const cmd = `vgs --environment=dev --tenant=${creds.tennantId} route --sync-all < ${tplsDumpPath}`;
+  console.log(cmd);
+  
+  exec(cmd, (err, stdout, stderr) => {
     if (err) {
       console.log('node couldn\'t execute the command', err);
       return;
     }
 
     if(stderr) {
-      console.log('error', stderr);
+      console.log('error while synsing routes', stderr);
     } else {
       console.log('Success!');
-      console.log(`Route configs from ${creds.tennantId} saved to stuff/dump.yaml`);
     }
   });
 }
@@ -60,7 +60,6 @@ const runAuth = (env) => {
       console.log('error', stderr);
     } else {
       console.log('Success!');
-      console.log(`Route configs from ${creds.tennantId} saved to stuff/dump.yaml`);
     }
   });
 }

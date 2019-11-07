@@ -29,7 +29,12 @@ const sendInbound = async (config) => {
       headers: config.headers,
       body: config.body,
       ...config.requestParamsOverrides,
-    })
+    });
+    console.log(' -------- inboundResult -------- ');
+    console.log('inbound status - ', response.status);
+    console.log('inbound text - ', response.statusText);
+    console.log('inbound body - ', await response.text());
+
     return await response.json();
   } catch (error) {
     console.log('Smth went wrong', error);
@@ -46,7 +51,14 @@ const sendOutbound = async (config) => {
       headers: config.headers,
       ...config.requestParamsOverrides,
     })
-    return response;
+    console.log(' -------- outboundResult -------- ');
+    console.log('response status - ', response.status);
+    console.log('response text - ', response.statusText);
+    // console.log('response body - ', await response.text());
+    const json = await response.json();
+    console.log('response json - ', json);
+
+    return await json;
   } catch (error) {
     console.log('Smth went wrong', error);
     return error;

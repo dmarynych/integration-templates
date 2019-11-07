@@ -17,9 +17,6 @@ const check = async () => {
   };
   const inboundResult = await global.testRunner.sendInbound(inboundRequestParams);
 
-  console.log(' -------- inboundResult -------- ');
-  console.log(await inboundResult.data);
-
   // should send redacted test data from proxy to 3rd party API
   const outboundRequestParams = {
     url: 'https://api.stripe.com/v1/tokens',
@@ -31,9 +28,6 @@ const check = async () => {
     body: `card[number]=${JSON.parse(inboundResult.data).card_number}&card[cvc]=${JSON.parse(inboundResult.data).card_cvc}&card[exp_month]=12&card[exp_year]=2020`
   };
   const outboundResult = await global.testRunner.sendOutbound(outboundRequestParams);
-
-  console.log(' -------- outboundResult -------- ');
-  console.log('response status - ', await outboundResult.status);
 };
 
 module.exports = check;

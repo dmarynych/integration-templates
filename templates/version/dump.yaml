@@ -50,88 +50,69 @@ data:
       transformer_config: ['card[number]']
       transformer_config_map: null
     host_endpoint: api\.stripe\.com
-    id: 20a7d233-7b92-4eeb-8979-5d0ddf0db92a
+    id: 00000000-0000-0000-0000-000000043231
     ordinal: null
     port: 80
     protocol: http
     source_endpoint: '*'
     tags: {name: stripe outbound}
     updated_at: '2019-10-01T16:50:09'
-  id: 20a7d233-7b92-4eeb-8979-5d0ddf0db92a
+  id: 00000000-0000-0000-0000-000000043231
   type: rule_chain
 - attributes:
-    created_at: '2019-10-01T16:50:09'
-    destination_override_endpoint: https://echo.apps.verygood.systems
-    entries:
-    - classifiers: {}
-      config:
-        condition: AND
-        expression: null
-        rules:
-        - condition: null
-          expression:
-            field: PathInfo
-            operator: equals
-            type: string
-            values: [/post]
-          rules: null
-        - condition: null
-          expression:
-            field: ContentType
-            operator: media_type_equals
-            type: string
-            values: [application/json;charset=UTF-8]
-          rules: null
-      id: 79cff6d0-b782-4418-97ee-7a4e6838c286
-      id_selector: null
-      operation: REDACT
-      operations: null
-      phase: REQUEST
-      public_token_generator: UUID
-      targets: [body]
-      token_manager: PERSISTENT
-      transformer: JSON_PATH
-      transformer_config: [$.card_number]
-      transformer_config_map: null
-    - classifiers: {}
-      config:
-        condition: AND
-        expression: null
-        rules:
-        - condition: null
-          expression:
-            field: PathInfo
-            operator: equals
-            type: string
-            values: [/post]
-          rules: null
-        - condition: null
-          expression:
-            field: ContentType
-            operator: media_type_equals
-            type: string
-            values: [application/json;charset=UTF-8]
-          rules: null
-      id: 4134bcc7-3762-4a92-b026-e54c1d2f8068
-      id_selector: null
-      operation: REDACT
-      operations: null
-      phase: REQUEST
-      public_token_generator: UUID
-      targets: [body]
-      token_manager: VOLATILE
-      transformer: JSON_PATH
-      transformer_config: [$.card_cvc]
-      transformer_config_map: null
-    host_endpoint: (.*).verygoodproxy.io
-    id: 1bc06c7e-6b92-4387-a0b8-d5ebecbd2c2d
-    ordinal: null
-    port: 0
-    protocol: http
-    source_endpoint: '*'
-    tags: {name: 'https://echo.apps.verygood.systems-medium-sea-green-croissant'}
-    updated_at: '2019-10-01T16:50:09'
-  id: 1bc06c7e-6b92-4387-a0b8-d5ebecbd2c2d
+   created_at: '2019-11-07T12:30:42'
+   destination_override_endpoint: 'https://echo.apps.verygood.systems'
+   entries:
+    -
+     id: 0832fccb-2c2c-4d8d-afd0-6381e952b139
+     phase: REQUEST
+     operation: REDACT
+     token_manager: PERSISTENT
+     public_token_generator: UUID
+     transformer: JSON_PATH
+     transformer_config:
+      - $.account_number
+     transformer_config_map: null
+     operations: null
+     targets:
+      - body
+     id_selector: null
+     classifiers: {}
+     config:
+      rules:
+       -
+        operator: matches
+        type: string
+        value: /post
+        field: PathInfo
+        condition: null
+        expression:
+         field: PathInfo
+         type: string
+         operator: matches
+         values: [/post]
+       -
+        operator: equals
+        type: string
+        value: application/json
+        field: ContentType
+        condition: null
+        expression:
+         field: ContentType
+         type: string
+         operator: equals
+         values: [application/json]
+      condition: AND
+   host_endpoint: '(.*)\.verygoodproxy\.io'
+   id: e2f1d125-e91f-4f76-9a66-1b240f1f931c
+   ordinal: null
+   port: 80
+   protocol: http
+   source_endpoint: '*'
+   tags:
+    name: echo.apps.verygood.systems-lime-suede
+   updated_at: '2019-11-07T12:30:42'
+  id: e2f1d125-e91f-4f76-9a66-1b240f1f931c
   type: rule_chain
 version: 1
 
