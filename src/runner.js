@@ -27,7 +27,7 @@ const runDumpAndSync = async (requestedIntegration, requestedIntegrationVersion)
   cmn.clearDumpFiles();
   if (!cmn.checkIntegrationAndVersion(requestedIntegration, requestedIntegrationVersion)) return;
   await vgsCli.async_runDump();
-  yamlUtil.getYamlFile(requestedIntegration, requestedIntegrationVersion);
+  yamlUtil.dealWithYamlDumps(requestedIntegration, requestedIntegrationVersion);
 };
 
 module.exports = {

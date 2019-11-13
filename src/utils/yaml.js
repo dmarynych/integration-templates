@@ -4,41 +4,54 @@ const promptly = require('promptly');
 const deepDiff = require('deep-diff').diff;
 const vgsCli = require('./vgs-cli');
 const cmn = require('./common');
+const log = require('./log');
 
-const getYamlFile = (requestedIntegration, requestedIntegrationVersion) => {
+const dealWithYamlDumps = async (requestedIntegration, requestedIntegrationVersion) => {
   try {
     const dumpFile = fs.readFileSync(process.env.PWD+'/stuff/dump.yaml', 'utf8');
     const dump = jsyaml.safeLoad(dumpFile);
-    parsePerfectCase(dump, requestedIntegration, requestedIntegrationVersion);
-  } catch (e) {
-    console.log(e);
-  }
-}
+    const tplsDumpPath = `integrations/${requestedIntegration}/${requestedIntegrationVersion}/dump.yaml`;
+    let tplDump;
 
-const parsePerfectCase = async (dump, requestedIntegration, requestedIntegrationVersion) => {
-  const tplsDumpPath = `integrations/${requestedIntegration}/${requestedIntegrationVersion}/dump.yaml`;
-
-  const tplDump = jsyaml.safeLoad(
-    fs.readFileSync(`${process.env.PWD}/${tplsDumpPath}`, 'utf8')
-  );
-
-  const diff = deepDiff(dump, tplDump);
-  if (!diff) {
-    console.log('Yaml files are same');
-    return;
-  } else {
-    const parsedDump = await parseYamlDump(dump, tplDump);
-    if (!parsedDump) {
-      console.log('parsed dump not valid, aborting');
+    try {
+      tplDump = jsyaml.safeLoad(
+        fs.readFileSync(`${process.env.PWD}/${tplsDumpPath}`, 'utf8')
+      );
+    } catch (e) {
+      log.logError('Failed to get template routes dump');
       return;
     }
-    fs.writeFileSync(
-      `${process.env.PWD}/stuff/modified_dump.yaml`,
-      parsedDump,
-      { encoding: 'utf8' },
-    );
-    console.log(diff);
-    vgsCli.runSync(`stuff/modified_dump.yaml`);
+
+    const diff = deepDiff(dump, tplDump);
+    if (!diff) {
+      console.log('Yaml files are same');
+      return;
+    } else {
+      const combinedDump = await parseYamlDump(dump, tplDump);
+      let parsedDump;
+
+      try {
+        parsedDump = jsyaml.safeDump(combinedDump);
+      } catch (e) {
+        log.logError(e);
+      }
+
+      if (!parsedDump) {
+        log.logError('parsed dump not valid, aborting');
+        return;
+      }
+      fs.writeFileSync(
+        `${process.env.PWD}/stuff/modified_dump.yaml`,
+        parsedDump,
+        { encoding: 'utf8' },
+      );
+      log.showDumpDiff(diff, combinedDump);
+      if (await promptly.confirm(`You are going to update routes for ${cmn.getCredentials().tennantId}. Are you sure about this?:`)) {
+        vgsCli.runSync(`stuff/modified_dump.yaml`);
+      }
+    }
+  } catch (e) {
+    log.logError(e);
   }
 }
 
@@ -52,10 +65,10 @@ const parseYamlDump = async (dump, tplDump) => {
     },
   };
   if (!dump) {
-    console.log('dump is empty, aborting');
+    log.logError('dump is empty, aborting');
     return;
   }
-  const alt_result = {
+  const combinedDump = {
     data: [],
     version: dump.version,
   }
@@ -78,22 +91,22 @@ const parseYamlDump = async (dump, tplDump) => {
   });
 
   // convert result -> array -> yaml dump
-  result.inbound && alt_result.data.push(result.inbound);
+  result.inbound && combinedDump.data.push(result.inbound);
   for (let route in result.outbound) {
-    if (result.outbound.hasOwnProperty(route)) alt_result.data.push(result.outbound[route]);
+    if (result.outbound.hasOwnProperty(route)) combinedDump.data.push(result.outbound[route]);
   }
 
   if (result.dumpInbound || result.inbound) {
-    alt_result.data.push(await inboundWorker(result.dumpInbound, result.inbound));
+    combinedDump.data.push(await inboundWorker(result.dumpInbound, result.inbound));
   }
-  
-  return jsyaml.safeDump(alt_result);
+
+  return combinedDump;
 }
 
 const inboundWorker = async (dumpRoute, tplInbound) => {
-  if (tplInbound && tplInbound.id !== dumpRoute.id) {
+  if (tplInbound && dumpRoute && tplInbound.id !== dumpRoute.id) {
     // route id differs from tpl id, show diff & ask rewrite
-    const shouldRewrite = await promptly.confirm('You already have inbound route, rewrite?:');
+    const shouldRewrite = await promptly.confirm('You already have inbound route, rewrite?(y/n):');
     if (shouldRewrite) {
       tplInbound.id = dumpRoute.id;
       tplInbound.attributes.id = dumpRoute.id;
@@ -105,5 +118,5 @@ const inboundWorker = async (dumpRoute, tplInbound) => {
 }
 
 module.exports = {
-  getYamlFile,
+  dealWithYamlDumps,
 }

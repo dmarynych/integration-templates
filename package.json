@@ -3,8 +3,6 @@
   "description": "",
   "version": "0.1.0",
   "scripts": {
-    "auth-dev": "vgs --environment=dev authenticate",
-    "auth": "vgs authenticate",
     "postinstall": "chmod +x ./tool"
   },
   "dependencies": {
