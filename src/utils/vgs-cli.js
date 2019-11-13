@@ -3,6 +3,7 @@ const cmn = require('./common');
 const log = require('./log');
 const util = require('util');
 const async_exec = util.promisify(require('child_process').exec);
+const promptly = require('promptly');
 
 const async_runDump = async () => {
   try {
