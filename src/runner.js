@@ -17,9 +17,7 @@ const tryToRun = (requestedIntegration, requestedIntegrationVersion) => {
     // get config file and pass inners to process.env
     cmn.getConfig(requestedIntegration, requestedIntegrationVersion);
 
-    const requestedTest = require(integrationList[requestedIntegration].versions[requestedIntegrationVersion].path + '/test');
-
-    requestedTest();
+    require(integrationList[requestedIntegration].versions[requestedIntegrationVersion].path + '/test');
   }
 }
 

@@ -30,4 +30,4 @@ const check = async () => {
   const outboundResult = await global.testRunner.sendOutbound(outboundRequestParams);
 };
 
-module.exports = check;
+check();

@@ -3,3 +3,4 @@ node_modules/
 stuff/modified_dump.yaml
 
 .idea/
+.vscode
