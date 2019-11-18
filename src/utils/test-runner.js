@@ -1,14 +1,14 @@
 const _ = require('lodash');
-const https = require('https'); // should be here for RunKit
+const https = require('https'); /* should be here for RunKit*/
 const HttpsProxyAgent = require('https-proxy-agent');
 const fetch = require('node-fetch');
 
 const configRunner = async () => {
-  if (!process.env.username) {
+  if (!process.env.vgs_username) {
     console.log('Missing username, aborting');
     return;
   }
-  if (!process.env.password) {
+  if (!process.env.vgs_password) {
     console.log('Missing password, aborting');
     return;
   }
@@ -18,7 +18,7 @@ const configRunner = async () => {
   }
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-  process.env.HTTPS_PROXT_AGENT_URL = `http://${process.env.username}:${process.env.password}@${process.env.tennantId}.sandbox.verygoodproxy.io:8080`;
+  process.env.HTTPS_PROXT_AGENT_URL = `http://${process.env.vgs_username}:${process.env.vgs_password}@${process.env.tennantId}.sandbox.verygoodproxy.io:8080`;
 }
 
 
@@ -70,7 +70,7 @@ const sendOutbound = async (config) => {
   }
 }
 
-// for dashboard
+/*for dashboard*/
 global.testRunner = {
   configRunner,
   sendInbound,

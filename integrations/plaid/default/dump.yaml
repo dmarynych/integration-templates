@@ -40,7 +40,7 @@ data:
    protocol: http
    source_endpoint: '*'
    tags:
-    name: 'stripe outbound'
+    name: 'plaid outbound'
    updated_at: '2019-11-07T13:38:06'
   id: 00000000-0000-0000-0000-000000043231
   type: rule_chain

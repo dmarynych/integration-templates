@@ -129,7 +129,7 @@ data:
     port: 0
     protocol: http
     source_endpoint: '*'
-    tags: {name: 'https://echo.apps.verygood.systems-medium-sea-white-croissant'}
+    tags: {name: 'stripe direct inbound'}
     updated_at: '2019-10-01T16:50:09'
   id: 00000000-0000-0000-0000-000000043242
   type: rule_chain
