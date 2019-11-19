@@ -26,4 +26,4 @@ const check = async () => {
   assert.notEqual(1111222233330000, token);
 };
 
-module.exports = check;
+check();
