@@ -42,3 +42,5 @@ workflows:
             branches:
               only:
                 - master
+      - validate_integrations:
+          context: frontend-deploy
