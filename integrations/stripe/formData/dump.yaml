@@ -55,7 +55,7 @@ data:
     port: 80
     protocol: http
     source_endpoint: '*'
-    tags: {name: stripe outbound}
+    tags: {name: stripe outbound, integration: stripe}
     updated_at: '2019-10-01T16:50:09'
   id: 00000000-0000-0000-0000-000000043231
   type: rule_chain

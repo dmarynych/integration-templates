@@ -95,6 +95,7 @@ data:
    source_endpoint: '*'
    tags:
     name: checkr outbound
+    integration: checkr
    updated_at: '2019-11-07T16:00:33'
   id: f3f7af03-4209-4d13-9b98-625096cfedb7
   type: rule_chain
