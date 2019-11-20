@@ -61,7 +61,7 @@ data:
     port: 80
     protocol: http
     source_endpoint: '*'
-    tags: {name: visa direct inbound}
+    tags: {name: visa direct inbound, integration: visa-direct}
   id: 00000000-0000-0000-0000-000000000121
   type: rule_chain
 - attributes:
