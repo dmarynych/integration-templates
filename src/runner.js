@@ -10,8 +10,8 @@ const tryToRun = (requestedIntegration, requestedIntegrationVersion) => {
   if (requestedIntegration && requestedIntegrationVersion) {
     const integrationList = cmn.getIntegrationList();
     console.log('perform run test for ', requestedIntegration, requestedIntegrationVersion);
-    process.env.username = creds.username;
-    process.env.password = creds.password;
+    process.env.vgs_username = creds.username;
+    process.env.vgs_password = creds.password;
     process.env.tennantId = creds.tennantId;
 
     // get config file and pass inners to process.env
