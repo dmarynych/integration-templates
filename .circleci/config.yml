@@ -57,7 +57,7 @@ workflows:
             branches:
               only:
                 - master
-  tests:
+  build-test-and-deploy:
     jobs:
       - validate_integrations:
           context: frontend-deploy
