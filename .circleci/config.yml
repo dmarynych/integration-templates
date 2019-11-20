@@ -57,7 +57,7 @@ workflows:
             branches:
               only:
                 - master
-  tests-every-5min:
+  tests:
     jobs:
       - validate_integrations:
           context: frontend-deploy
