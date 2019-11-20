@@ -65,7 +65,7 @@ const clearDumpFiles = () => {
 
 const getConfig = (requestedIntegration) => {
   const config = JSON.parse(fs.readFileSync(`${integrationRootDir}${requestedIntegration}/config.json`));
-  for (const variable in config) {
+  for (const variable in config.params) {
     if(config.hasOwnProperty(variable)) {
       process.env[variable] = config[variable];
     }
