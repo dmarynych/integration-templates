@@ -1,5 +1,20 @@
 version: 2
 jobs:
+  validate_integrations:
+    docker:
+      - image: circleci/node:10.14-browsers
+
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
+
+      - run: npm install
+      - run: node scripts/validate.js
+
   testcafe:
     docker:
       - image: circleci/node:10.14-browsers
