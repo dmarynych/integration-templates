@@ -61,7 +61,3 @@ workflows:
     jobs:
       - validate_integrations:
           context: frontend-deploy
-          filters:
-            branches:
-              only:
-                - master
