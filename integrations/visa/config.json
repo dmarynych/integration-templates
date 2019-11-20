@@ -1,3 +1,6 @@
 {
-  "authToken": "MkVIUFRLQ0tTVVRKWFRINDMwVjcyMXRJWDZtZm8yZjBfSlo0YTJiVGJaczhPS01IazpIaTM3MHR1N2lCWXVtNlJabkVmMno2VjNLOVFxdU4yaDY4"
+  "params": {
+    "authToken": ""
+  },
+  "category": "Payment Processors"
 }
