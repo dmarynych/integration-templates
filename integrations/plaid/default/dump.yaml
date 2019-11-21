@@ -34,7 +34,7 @@ data:
          values: [/auth/get]
       condition: AND
    host_endpoint: sandbox\.plaid\.com
-   id: 00000000-0000-0000-0000-000000043231
+   id: 00000000-0000-0000-0000-000000043237
    ordinal: null
    port: 80
    protocol: http
@@ -43,7 +43,7 @@ data:
     name: 'plaid outbound'
     integration: plaid
    updated_at: '2019-11-07T13:38:06'
-  id: 00000000-0000-0000-0000-000000043231
+  id: 00000000-0000-0000-0000-000000043237
   type: rule_chain
 version: 1
 

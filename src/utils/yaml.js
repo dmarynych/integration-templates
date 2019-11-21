@@ -1,122 +1,135 @@
 const fs = require('fs');
+const _ = require('lodash');
 const jsyaml = require('js-yaml');
 const promptly = require('promptly');
-const deepDiff = require('deep-diff').diff;
 const vgsCli = require('./vgs-cli');
 const cmn = require('./common');
 const log = require('./log');
 
 const dealWithYamlDumps = async (requestedIntegration, requestedIntegrationVersion) => {
-  try {
-    const dumpFile = fs.readFileSync(process.env.PWD+'/stuff/dump.yaml', 'utf8');
-    const dump = jsyaml.safeLoad(dumpFile);
-    const tplsDumpPath = `integrations/${requestedIntegration}/${requestedIntegrationVersion}/dump.yaml`;
-    let tplDump;
+	try {
+		const dumpFile = fs.readFileSync(process.env.PWD+'/stuff/dump.yaml', 'utf8');
+		const dump = jsyaml.safeLoad(dumpFile);
+		const tplsDumpPath = `integrations/${requestedIntegration}/${requestedIntegrationVersion}/dump.yaml`;
+		let tplDump;
 
-    try {
-      tplDump = jsyaml.safeLoad(
-        fs.readFileSync(`${process.env.PWD}/${tplsDumpPath}`, 'utf8')
-      );
-    } catch (e) {
-      log.logError('Failed to get template routes dump');
-      return;
-    }
+		try {
+			tplDump = jsyaml.safeLoad(
+				fs.readFileSync(`${process.env.PWD}/${tplsDumpPath}`, 'utf8')
+			);
+		} catch (e) {
+			log.logError('Failed to get template routes dump');
+			return;
+		}
 
-    const diff = deepDiff(dump, tplDump);
-    if (!diff) {
-      console.log('Yaml files are same');
-      return;
-    } else {
-      const combinedDump = await parseYamlDump(dump, tplDump);
-      let parsedDump;
+		const combined = await combine(dump, tplDump);
+		let parsedDump;
 
-      try {
-        parsedDump = jsyaml.safeDump(combinedDump);
-      } catch (e) {
-        log.logError(e);
-      }
+		try {
+			parsedDump = jsyaml.safeDump(combined.packed);
+		} catch (e) {
+			log.logError('Parsed dump not valid, aborting \n', e);
+			process.exit();
+		}
 
-      if (!parsedDump) {
-        log.logError('parsed dump not valid, aborting');
-        return;
-      }
-      fs.writeFileSync(
-        `${process.env.PWD}/stuff/modified_dump.yaml`,
-        parsedDump,
-        { encoding: 'utf8' },
-      );
-      log.showDumpDiff(diff, combinedDump);
-      if (await promptly.confirm(`You are going to update routes for ${cmn.getCredentials().tennantId}. Are you sure about this?:`)) {
-        vgsCli.runSync(`stuff/modified_dump.yaml`);
-      }
-    }
-  } catch (e) {
-    log.logError(e);
-  }
-}
+		try {
+			fs.writeFileSync(
+				`${process.env.PWD}/stuff/modified_dump.yaml`,
+				parsedDump,
+				{ encoding: 'utf8' },
+			);
+		} catch (e) {
+			log.logError('Couldn\'t update dump file, aborting \n', e);
+			process.exit();
+		}
 
-const parseYamlDump = async (dump, tplDump) => {
-  // TODO add possibility to choose routes to sync by id
-  const result = {
-    inbound: false,
-    dumpInbound: false,
-    outbound: {
-      // id: route
-    },
-  };
-  if (!dump) {
-    log.logError('dump is empty, aborting');
-    return;
-  }
-  const combinedDump = {
-    data: [],
-    version: dump.version,
-  }
+		log.showDiff(combined);
 
-  tplDump.data.forEach(route => {
-    if (cmn.getProxyType(route.attributes) === 'inbound') {
-      result.inbound = route;
-    } else {
-      result.outbound[route.id] = route;
-    }
-  });
-  
-  dump.data.forEach(route => {
-    isRoutesExists = true;
-    if (cmn.getProxyType(route.attributes) === 'inbound') {
-      result.dumpInbound = route;
-    } else if (!result.outbound[route.id]) {
-      result.outbound[route.id] = route;
-    }
-  });
+		if (await promptly.confirm(`You are going to update routes for ${log.colors.FgRed+cmn.getCredentials().tennantId+log.colors.FgDefault}. Are you sure about this?(y/n):`)) {
+			vgsCli.runSync('stuff/modified_dump.yaml');
+		}
+	} catch (e) {
+		log.logError(e);
+	}
+};
 
-  // convert result -> array -> yaml dump
-  result.inbound && combinedDump.data.push(result.inbound);
-  for (let route in result.outbound) {
-    if (result.outbound.hasOwnProperty(route)) combinedDump.data.push(result.outbound[route]);
-  }
+const combine = async (dump, tpl) => {
+	if (!dump) {
+		log.logError('dump is empty, aborting');
+		process.exit();
+	}
 
-  if (result.dumpInbound || result.inbound) {
-    combinedDump.data.push(await inboundWorker(result.dumpInbound, result.inbound));
-  }
+	const combined = {
+		dump: { in: {}, out: {} },
+		tpl: { in: {}, out: {} },
+		result: { in: {}, out: {} },
+		packed: { data: [], version: dump.version },
+	};
 
-  return combinedDump;
-}
+	tpl.data.forEach(route => {
+		if (cmn.getProxyType(route.attributes) === 'inbound') {
+			combined.tpl.in = route;
+		} else {
+			combined.tpl.out[route.id] = route;
+		}
+	});
 
-const inboundWorker = async (dumpRoute, tplInbound) => {
-  if (tplInbound && dumpRoute && tplInbound.id !== dumpRoute.id) {
-    // route id differs from tpl id, show diff & ask rewrite
-    const shouldRewrite = await promptly.confirm('You already have inbound route, rewrite?(y/n):');
-    if (shouldRewrite) {
-      tplInbound.id = dumpRoute.id;
-      tplInbound.attributes.id = dumpRoute.id;
-      return tplInbound;
-    }
-  } else {
-    return dumpRoute;
-  }
-}
+	dump.data.forEach(route => {
+		if (cmn.getProxyType(route.attributes) === 'inbound') {
+			combined.dump.in = route;
+		} else {
+			combined.dump.out[route.id] = route;
+		}
+	});
+
+	if (combined.dump.in.id || combined.tpl.in.id) {
+		combined.result.in = await inboundWorker(combined.dump.in, combined.tpl.in);
+	}
+	// const inWorkerResult = await inboundWorker(combined.dump.in, combined.tpl.in);
+	// if (inWorkerResult) { combined.result.in = inWorkerResult; }
+
+	for (let route in combined.dump.out) {
+		if (combined.dump.out.hasOwnProperty(route)) {
+			combined.result.out[route] = combined.dump.out[route];
+		}
+	}
+	for (let route in combined.tpl.out) {
+		if (combined.tpl.out.hasOwnProperty(route)) {
+			combined.result.out[route] = combined.tpl.out[route];
+		}
+	}
+
+	// pack all together
+	if (!_.isEmpty(combined.result.in)) {
+		combined.packed.data.push(combined.result.in);
+	}
+	for (let route in combined.result.out) {
+		if (combined.result.out.hasOwnProperty(route)) {
+			combined.packed.data.push(combined.result.out[route]);
+		}
+	}
+
+	return combined;
+};
+
+const inboundWorker = async (dump, tpl) => {
+	if (!_.isEmpty(dump) && _.get(tpl, 'id') !== dump.id) {
+		// route id differs from tpl id, show diff & ask rewrite
+		const shouldRewrite = tpl.destination_override_endpoint !== dump.destination_override_endpoint
+			? await promptly.confirm('You already have inbound route, rewrite?(y/n):')
+			: true;
+		if (!_.isEmpty(tpl) && shouldRewrite) {
+			tpl.id = dump.id;
+			tpl.attributes.id = dump.id;
+			return tpl;
+		} else {
+			return dump;
+		}
+	} else {
+		return tpl;
+	}
+};
 
 module.exports = {
-  dealWithYamlDumps,
-}
+	dealWithYamlDumps,
+};
