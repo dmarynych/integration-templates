@@ -58,6 +58,8 @@ program
   .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "prod"')
   .action((cmd) => {
     vgsCli.runAuth(cmd.environment);
+
+    console.log(require('fs').readFileSync('./vgs-ascii').toString());
   });
 
 program.parse(process.argv);

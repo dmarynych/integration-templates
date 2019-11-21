@@ -50,7 +50,7 @@ data:
    protocol: http
    source_endpoint: '*'
    tags:
-    name: echo.apps.verygood.systems-turquoise-budget
+    name:
    updated_at: '2019-11-07T16:00:15'
   id: ec7ac6d4-7317-4031-ad5e-9160f1391ea1
   type: rule_chain
@@ -105,7 +105,8 @@ data:
    protocol: http
    source_endpoint: '*'
    tags:
-    name: white-smoke-mini-skirt
+    name:
+    integration:
    updated_at: '2019-11-07T16:00:33'
   id: f3f7af03-4209-4d13-9b98-625096cfedb7
   type: rule_chain

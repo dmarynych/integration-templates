@@ -3,7 +3,7 @@ const https = require('https'); /* should be here for RunKit*/
 const HttpsProxyAgent = require('https-proxy-agent');
 const fetch = require('node-fetch');
 
-const configRunner = async () => {
+const configRunner = async () => {  
   if (!process.env.vgs_username) {
     console.log('Missing username, aborting');
     return;
@@ -33,7 +33,7 @@ const sendInbound = async (config) => {
     console.log(' -------- inboundResult -------- ');
     console.log('inbound status - ', response.status);
     console.log('inbound text - ', response.statusText);
-    console.log('h', response.headers['content-type']);
+    console.log('inbound headers', response.headers['content-type']);
     
     const resp = await response.json();
     console.log('inbound body - ', resp);
@@ -58,7 +58,7 @@ const sendOutbound = async (config) => {
     console.log('response status - ', response.status);
     console.log('response text - ', response.statusText);
     // console.log('response body - ', await response.text());
-    console.log('hh', response.headers['content-type']);
+    console.log('outbound headers', response.headers['content-type']);
     
     const resp = response.headers['content-type'] === 'application/json' ? await response.json() : await response.text();
     console.log('response json - ', resp);
