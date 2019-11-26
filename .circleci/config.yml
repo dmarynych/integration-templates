@@ -15,6 +15,20 @@ jobs:
       - run: npm install
       - run: node scripts/validate.js
 
+  deploy:
+    docker:
+      - image: circleci/node:10.14-browsers
+
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
+      - run: node scripts/build_index.js
+      - run: NETLIFY_AUTH_TOKEN=$NETLIFY_TOKEN ./node_modules/netlify-cli/bin/run deploy --prod
+
   testcafe:
     docker:
       - image: circleci/node:10.14-browsers
@@ -62,7 +76,7 @@ workflows:
           context: frontend-deploy
       - deploy:
           context: frontend-deploy
-          filters:
-            branches:
-              only:
-                - master
+          # filters:
+          #   branches:
+          #     only:
+          #       - master
