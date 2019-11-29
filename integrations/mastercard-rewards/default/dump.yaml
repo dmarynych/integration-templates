@@ -1,0 +1,181 @@
+data:
+- attributes:
+    tags:
+      name: 'mastercard rewards outbound'
+    destination_override_endpoint: '*'
+    entries:
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: matches
+            type: string
+            values:
+            - /sdCommercialAPI/sdPurchaseControl2Service
+          rules: []
+      id_selector: null
+      operation: REDACT
+      operations: |-
+        [ {
+          "@type" : "type.googleapis.com/ProcessHttpHeaderOperationConfig",
+          "headers" : [ "X-Keystore", "X-Keystore-Pass", "X-Keystore-Default-Alias", "X-Keystore-Private-Key-Pass" ]
+        }, {
+          "@type" : "type.googleapis.com/RevealOperationConfig"
+        } ]
+      phase: REQUEST
+      public_token_generator: UUID
+      targets:
+      - body
+      token_manager: PERSISTENT
+      transformer: JSON_PATH
+      transformer_config:
+      - $.secret
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: matches
+            type: string
+            values:
+            - /sdCommercialAPI/sdPurchaseControl2Service
+          rules: null
+      id_selector: null
+      operation: REDACT
+      operations: null
+      phase: RESPONSE
+      public_token_generator: FPE_SIX_T_FOUR
+      targets: []
+      token_manager: PERSISTENT
+      transformer: XPATH
+      transformer_config:
+      - /*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='getPurchaseRequestDetail']/*[local-name()='vcnInformation']/*[local-name()='Pan']
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: matches
+            type: string
+            values:
+            - /sdCommercialAPI/sdPurchaseControl2Service
+          rules: null
+      id_selector: null
+      operation: REDACT
+      operations: null
+      phase: RESPONSE
+      public_token_generator: UUID
+      targets: []
+      token_manager: PERSISTENT
+      transformer: XPATH
+      transformer_config:
+      - /*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='getPurchaseRequestDetail']/*[local-name()='vcnInformation']/*[local-name()='Avv']
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values:
+            - /sdCommercialAPI/sdPurchaseControl2Service
+          rules: []
+      id_selector: null
+      operation: ENRICH
+      operations: null
+      phase: REQUEST
+      public_token_generator: UUID
+      targets:
+      - body
+      token_manager: PERSISTENT
+      transformer: XPATH
+      transformer_config:
+      - /*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='CreateVCNAuthsReportRequest']/@Pan
+      - /*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='CreateVCNClearingsReportRequest']/@Pan
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: matches
+            type: string
+            values:
+            - /sdCommercialAPI/sdPurchaseControl2Service
+          rules: []
+      id_selector: null
+      operation: REDACT
+      operations: |-
+        [ {
+          "@type" : "type.googleapis.com/JavascriptOperationConfig",
+          "script" : "VGS = {}; VGS.process = function(input, ctx) { ctx.keystore = input.headers().get('X-Keystore'); ctx.keystorePass = input.headers().get('X-Keystore-Pass'); ctx.keystoreDefaultAlias = input.headers().get('X-Keystore-Default-Alias'); ctx.keystorePrivateKeyPass = input.headers().get('X-Keystore-Private-Key-Pass'); return input;}"
+        }, {
+          "@type" : "type.googleapis.com/ProcessHttpBodyOperationConfig"
+        }, {
+          "@type" : "type.googleapis.com/SignSoapOperationConfig",
+          "keystore" : "${keystore}",
+          "keystorePass" : "${keystorePass}",
+          "keystoreDefaultAlias" : "${keystoreDefaultAlias}",
+          "keystorePrivateKeyPass" : "${keystorePrivateKeyPass}"
+        } ]
+      phase: REQUEST
+      public_token_generator: UUID
+      targets:
+      - body
+      token_manager: PERSISTENT
+      transformer: JSON_PATH
+      transformer_config: []
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: matches
+            type: string
+            values:
+            - /sdCommercialAPI/sdPurchaseControl2Service
+          rules: []
+      id_selector: null
+      operation: REDACT
+      operations: |-
+        [ {
+          "@type" : "type.googleapis.com/JavascriptOperationConfig",
+          "script" : "VGS = {}; VGS.process = function(input, ctx) { input.headers().remove('X-Keystore'); input.headers().remove('X-Keystore-Pass'); input.headers().remove('X-Keystore-Default-Alias'); input.headers().remove('X-Keystore-Private-Key-Pass'); return input;}"
+        } ]
+      phase: REQUEST
+      public_token_generator: UUID
+      targets:
+      - body
+      token_manager: PERSISTENT
+      transformer: JSON_PATH
+      transformer_config: []
+      transformer_config_map: null
+    host_endpoint: services\.mastercard\.com
+    port: 443
+    protocol: http
+    source_endpoint: '*'
+  type: rule_chain
+version: 1

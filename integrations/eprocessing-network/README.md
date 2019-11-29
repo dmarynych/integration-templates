@@ -1,0 +1,1 @@
+Provide the required card details (e.g. x_card_num, x_card_code, and x_bank_acct_num) to process the card through eProcessing Network.

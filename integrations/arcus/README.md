@@ -1,0 +1,3 @@
+If you are using the Arcus/Regalii API, you may want to use the yaml template below.  
+The Arcus/Regalii API requires you to hash your request's body payload using MD5, and then create a checksum from that hashed payload and a few other variables. You will need an `Authorization` header for the checksum, a `Content-MD5` header for your MD5 hashed body and a `Date` header.   
+Since a request's payload changes through VGS proxy, the template below is required to handle all recalculation for the required signature. In order to recalcualte that header, you need to add a `X-Secret` header which has your shared Arcus/Regalii secret.

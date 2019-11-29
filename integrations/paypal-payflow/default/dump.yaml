@@ -1,0 +1,71 @@
+data:
+- attributes:
+    tags:
+      name: 'paypal payflow outbound'
+    destination_override_endpoint: '*'
+    entries:
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values: [/post]
+          rules: null
+      id_selector: null
+      operation: ENRICH
+      operations: null
+      phase: REQUEST
+      public_token_generator: UUID
+      targets: [body]
+      token_manager: PERSISTENT
+      transformer: REGEX
+      transformer_config:
+        - '(?<prefix>ACCT\[\d\d\]=)(?<token>\d+)(?<suffix>\&)'
+        - '(?<prefix>CVV2\[\d\d\]=)(?<token>[A-Za-z][A-Za-z0-9-]+)(?<suffix>\&)'
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values: [/post]
+          rules: null
+        - condition: null
+          expression:
+            field: ContentType
+            operator: equals
+            type: string
+            values: [text/name value]
+          rules: null
+      id_selector: null
+      operation: ENRICH
+      operations: |-
+        [
+          { "@type": "type.googleapis.com/ProcessHttpBodyOperationConfig" },
+          { "@type": "type.googleapis.com/JavascriptOperationConfig",
+            "script": "var VGS = { decode: function(s) { return decodeURIComponent(s); }, parse: function(s) { var d = {}; var a = s.split('&'); if (a.length > 0) { for (var i in a) { var b = a[i].split('='); if (b.length === 2) { d[b[0]] = this.decode(b[1]); } } } return d; }, compute: function(parsed) { var regenerated = {}; for (var key in parsed) { var val = parsed[key]; var bits = key.split('['); var newKey = encodeURIComponent(bits[0]) + '[' + val.length + ']'; regenerated[newKey] = val; } return regenerated; }, zipItUp: function(regenerated) { var theBits = []; for (var key in regenerated) { var val = regenerated[key]; theBits.push(key + '=' + val); } return theBits.join('&'); }, process: function(input, ctx) { var body = util.codecs.utf8encode(input); var parsed = this.parse(body); var regenerated = this.compute(parsed); return this.zipItUp(regenerated); } }"
+          }
+        ]
+      phase: REQUEST
+      public_token_generator: UUID
+      targets: [body]
+      token_manager: PERSISTENT
+      transformer: REGEX
+      transformer_config: ['.*']
+      transformer_config_map: null
+    host_endpoint: echo\.apps\.verygood\.systems
+    port: 80
+    protocol: http
+    source_endpoint: '*'
+  type: rule_chain
+version: 1

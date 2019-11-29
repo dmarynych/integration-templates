@@ -1,0 +1,62 @@
+data:
+- attributes:
+   tags:
+     name: 'create customer authorize.net outbound'
+   destination_override_endpoint: '*'
+   entries:
+    -
+     phase: REQUEST
+     operation: ENRICH
+     token_manager: VOLATILE
+     public_token_generator: FPE_SIX_T_FOUR
+     transformer: XPATH
+     transformer_config:
+      - '/*[local-name()=''createCustomerPaymentProfileRequest'']/*[local-name()=''paymentProfile'']/*[local-name()=''payment'']/*[local-name()=''creditCard'']/*[local-name()=''cardNumber'']'
+     transformer_config_map: null
+     operations: null
+     targets: []
+     id_selector: null
+     classifiers: {}
+     config:
+      condition: AND
+      rules:
+       -
+        condition: null
+        rules: null
+        expression:
+         field: Method
+         type: string
+         operator: equals
+         values: [POST]
+      expression: null
+    -
+     phase: REQUEST
+     operation: ENRICH
+     token_manager: VOLATILE
+     public_token_generator: UUID
+     transformer: XPATH
+     transformer_config:
+      - '/*[local-name()=''createCustomerPaymentProfileRequest'']/*[local-name()=''paymentProfile'']/*[local-name()=''payment'']/*[local-name()=''creditCard'']/*[local-name()=''cardCode'']'
+     transformer_config_map: null
+     operations: null
+     targets: []
+     id_selector: null
+     classifiers: {}
+     config:
+      condition: AND
+      rules:
+       -
+        condition: null
+        rules: null
+        expression:
+         field: Method
+         type: string
+         operator: equals
+         values: [POST]
+      expression: null
+   host_endpoint: '(.*)api2\.authorize\.net'
+   port: 443
+   protocol: http
+   source_endpoint: '*'
+  type: rule_chain
+version: 1

@@ -1,0 +1,85 @@
+data:
+- attributes:
+    tags:
+      name: 'experian outbound'
+    destination_override_endpoint: '*'
+    entries:
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: Method
+            operator: equals
+            type: string
+            values:
+            - POST
+          rules: null
+      id_selector: null
+      operation: ENRICH
+      operations: null
+      phase: REQUEST
+      public_token_generator: UUID
+      targets:
+      - body
+      token_manager: PERSISTENT
+      transformer: REGEX
+      transformer_config:
+      - (vgs|tok)_([A-z][A-z0-9]+)_([A-z0-9]+)
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: Method
+            operator: equals
+            type: string
+            values:
+            - POST
+          rules: null
+      id_selector: null
+      operation: REDACT
+      operations: null
+      phase: RESPONSE
+      public_token_generator: UUID
+      targets: []
+      token_manager: PERSISTENT
+      transformer: XPATH
+      transformer_config:
+      - /NetConnectResponse/Products/CustomSolution/SSN/Number
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: Method
+            operator: equals
+            type: string
+            values:
+            - POST
+          rules: null
+      id_selector: null
+      operation: REDACT
+      operations: null
+      phase: RESPONSE
+      public_token_generator: UUID
+      targets: []
+      token_manager: PERSISTENT
+      transformer: XPATH
+      transformer_config:
+      - /NetConnectResponse/Products/CreditProfile/SSN/Number
+      transformer_config_map: null
+    host_endpoint: ss3\.experian\.com
+    port: 80
+    protocol: http
+    source_endpoint: '*'
+  type: rule_chain
+version: 1

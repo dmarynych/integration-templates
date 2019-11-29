@@ -1,0 +1,49 @@
+data:
+ -
+  attributes:
+   tags:
+     name: 'epicgateway outbound'
+   destination_override_endpoint: '*'
+   entries:
+    -
+     phase: REQUEST
+     operation: ENRICH
+     token_manager: VOLATILE
+     public_token_generator: PFPT
+     transformer: FORM_FIELD
+     transformer_config:
+      - x_card_num
+      - x_card_code
+      - x_bank_acct_num
+     transformer_config_map: null
+     operations: null
+     targets:
+      - body
+     id_selector: null
+     classifiers: {}
+     config:
+      condition: AND
+      rules:
+       -
+        condition: null
+        rules: null
+        expression:
+         field: PathInfo
+         type: string
+         operator: equals
+         values: [/gateway/transact.dll]
+       -
+        condition: null
+        rules: null
+        expression:
+         field: ContentType
+         type: string
+         operator: equals
+         values: [application/x-www-form-urlencoded]
+      expression: null
+   host_endpoint: secure.epicgateway.com
+   port: 80
+   protocol: http
+   source_endpoint: '*'
+  type: rule_chain
+version: 1

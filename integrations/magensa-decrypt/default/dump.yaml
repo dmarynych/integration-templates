@@ -1,0 +1,290 @@
+data:
+- attributes:
+    tags:
+      name: 'magensa decrypt outbound'
+    destination_override_endpoint: '*'
+    entries:
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values:
+            - /Decrypt.svc
+          rules: null
+        - condition: null
+          expression:
+            field: ContentType
+            operator: begins_with
+            type: string
+            values:
+            - text/xml
+          rules: []
+      id_selector: null
+      operation: REDACT
+      operations: |-
+        [ {
+          "@type" : "type.googleapis.com/ProcessHttpBodyOperationConfig"
+        }, {
+          "@type" : "type.googleapis.com/ReplaceXPathOperationConfig",
+          "xpaths" : [ "//*[local-name()='Track1']/text()" ]
+        }, {
+          "@type" : "type.googleapis.com/ReplaceRegexOperationConfig",
+          "searchPattern" : "(?<prefix>%B)(?<token>\\d{1,19})(?<suffix>\\^)",
+          "replacePattern" : "$1$2$3",
+          "groupsToProcess" : [ 2 ]
+        }, {
+          "@type" : "type.googleapis.com/RedactOperationConfig"
+        } ]
+      phase: RESPONSE
+      public_token_generator: PFPT
+      targets:
+      - body
+      token_manager: PERSISTENT
+      transformer: XPATH
+      transformer_config:
+      - /Envelope/Body/DecryptCardSwipeResponse/DecryptCardSwipeResult/DecryptedCardSwipe/Track1
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values:
+            - /Decrypt.svc
+          rules: null
+        - condition: null
+          expression:
+            field: ContentType
+            operator: begins_with
+            type: string
+            values:
+            - text/xml
+          rules: []
+      id_selector: null
+      operation: REDACT
+      operations: |-
+        [ {
+          "@type" : "type.googleapis.com/ProcessHttpBodyOperationConfig"
+        }, {
+          "@type" : "type.googleapis.com/ReplaceXPathOperationConfig",
+          "xpaths" : [ "//*[local-name()='Track2']/text()" ]
+        }, {
+          "@type" : "type.googleapis.com/ReplaceRegexOperationConfig",
+          "searchPattern" : "(?<prefix>;)(?<token>\\d{1,19})",
+          "replacePattern" : "$1$2",
+          "groupsToProcess" : [ 2 ]
+        }, {
+          "@type" : "type.googleapis.com/RedactOperationConfig"
+        } ]
+      phase: RESPONSE
+      public_token_generator: PFPT
+      targets:
+      - body
+      token_manager: PERSISTENT
+      transformer: XPATH
+      transformer_config:
+      - /Envelope/Body/DecryptCardSwipeResponse/DecryptCardSwipeResult/DecryptedCardSwipe/Track2
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values:
+            - /Decrypt.svc
+          rules: null
+        - condition: null
+          expression:
+            field: ContentType
+            operator: equals
+            type: string
+            values:
+            - text/xml; charset=utf-8
+          rules: null
+      id_selector: null
+      operation: REDACT
+      operations: |-
+        [ {
+          "@type" : "type.googleapis.com/ProcessHttpBodyOperationConfig"
+        }, {
+          "@type" : "type.googleapis.com/ReplaceXPathOperationConfig",
+          "xpaths" : [ "/Envelope/Body/DecryptDataResponse/DecryptDataResult/DecryptedData/text()" ]
+        }, {
+          "tags" : [ "5A" ],
+          "@type" : "type.googleapis.com/TlvOperationConfig"
+        }, {
+          "@type" : "type.googleapis.com/ReplaceRegexOperationConfig",
+          "searchPattern" : "(?<pan>\\d{1,19})(?<other>.*)",
+          "replacePattern" : "$1$2",
+          "groupsToProcess" : [ 1 ]
+        }, {
+          "@type" : "type.googleapis.com/RedactOperationConfig"
+        } ]
+      phase: RESPONSE
+      public_token_generator: PFPT
+      targets:
+      - body
+      token_manager: PERSISTENT
+      transformer: XPATH
+      transformer_config:
+      - /Envelope/Body/DecryptDataResponse/DecryptDataResult/DecryptedData
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values:
+            - /Decrypt.svc
+          rules: null
+        - condition: null
+          expression:
+            field: ContentType
+            operator: equals
+            type: string
+            values:
+            - text/xml; charset=utf-8
+          rules: []
+      id_selector: null
+      operation: REDACT
+      operations: |-
+        [ {
+          "@type" : "type.googleapis.com/ProcessHttpBodyOperationConfig"
+        }, {
+          "@type" : "type.googleapis.com/ReplaceXPathOperationConfig",
+          "xpaths" : [ "/Envelope/Body/DecryptDataResponse/DecryptDataResult/DecryptedData/text()" ]
+        }, {
+          "tags" : [ "57" ],
+          "@type" : "type.googleapis.com/TlvOperationConfig"
+        }, {
+          "@type" : "type.googleapis.com/ReplaceRegexOperationConfig",
+          "searchPattern" : "(?<pan>\\d{1,19})(?<other>.*)",
+          "replacePattern" : "$1$2",
+          "groupsToProcess" : [ 1 ]
+        }, {
+          "@type" : "type.googleapis.com/RedactOperationConfig"
+        } ]
+      phase: RESPONSE
+      public_token_generator: PFPT
+      targets:
+      - body
+      token_manager: PERSISTENT
+      transformer: XPATH
+      transformer_config:
+      - /Envelope/Body/DecryptDataResponse/DecryptDataResult/DecryptedData
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values:
+            - /Decrypt.svc
+          rules: null
+        - condition: null
+          expression:
+            field: ContentType
+            operator: equals
+            type: string
+            values:
+            - text/xml; charset=utf-8
+          rules: []
+      id_selector: null
+      operation: REDACT
+      operations: |-
+        [ {
+          "@type" : "type.googleapis.com/ProcessHttpBodyOperationConfig"
+        }, {
+          "@type" : "type.googleapis.com/ReplaceXPathOperationConfig",
+          "xpaths" : [ "//*[local-name()='Track1']/text()" ]
+        }, {
+          "@type" : "type.googleapis.com/ReplaceRegexOperationConfig",
+          "searchPattern" : "(?<prefix>\\^.*\\^\\d{4}\\d{3})(?<token>.*)(?<suffix>\\?)"
+        }, {
+          "@type" : "type.googleapis.com/RedactOperationConfig"
+        } ]
+      phase: RESPONSE
+      public_token_generator: UUID
+      targets:
+      - body
+      token_manager: PERSISTENT
+      transformer: XPATH
+      transformer_config:
+      - /Envelope/Body/DecryptCardSwipeResponse/DecryptCardSwipeResult/DecryptedCardSwipe/Track1
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values:
+            - /Decrypt.svc
+          rules: null
+        - condition: null
+          expression:
+            field: ContentType
+            operator: equals
+            type: string
+            values:
+            - text/xml; charset=utf-8
+          rules: null
+      id_selector: null
+      operation: REDACT
+      operations: |-
+        [ {
+          "@type" : "type.googleapis.com/ProcessHttpBodyOperationConfig"
+        }, {
+          "@type" : "type.googleapis.com/ReplaceXPathOperationConfig",
+          "xpaths" : [ "//*[local-name()='Track2']/text()" ]
+        }, {
+          "@type" : "type.googleapis.com/ReplaceRegexOperationConfig",
+          "searchPattern" : "(?<prefix>=\\d{4}\\d{3})(?<token>.*)(?<suffix>\\?)"
+        }, {
+          "@type" : "type.googleapis.com/RedactOperationConfig"
+        } ]
+      phase: RESPONSE
+      public_token_generator: UUID
+      targets:
+      - body
+      token_manager: PERSISTENT
+      transformer: XPATH
+      transformer_config:
+      - /Envelope/Body/DecryptCardSwipeResponse/DecryptCardSwipeResult/DecryptedCardSwipe/Track2
+      transformer_config_map: null
+    host_endpoint: decrypt\-pilot\.magensa\.net
+    port: 443
+    protocol: http
+    source_endpoint: '*'
+  type: rule_chain
+version: 1
