@@ -2,6 +2,7 @@ data:
 - attributes:
     tags:
       name: 'mastercard rewards outbound'
+      integration: mastercard-rewards
     destination_override_endpoint: '*'
     entries:
     - classifiers: {}

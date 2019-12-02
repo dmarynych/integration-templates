@@ -3,6 +3,7 @@ data:
   attributes:
    tags:
      name: 'create customer authorize.net legacy outbound'
+     integration: authorize.net-create-customer-legacy
    destination_override_endpoint: '*'
    entries:
     -

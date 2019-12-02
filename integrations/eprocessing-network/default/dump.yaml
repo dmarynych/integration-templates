@@ -3,6 +3,7 @@ data:
   attributes:
    tags:
      name: 'eprocessingnetwork outbound'
+     integration: eprocessing-network
    destination_override_endpoint: '*'
    entries:
     -
