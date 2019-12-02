@@ -95,8 +95,7 @@ workflows:
           context: frontend-deploy
           filters:
             branches:
-              only:
-                - master
+              only: master
       - deploy-dev:
           context: frontend-deploy
           filters:
