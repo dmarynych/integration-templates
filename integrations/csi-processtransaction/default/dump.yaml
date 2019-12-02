@@ -1,0 +1,136 @@
+data:
+- attributes:
+    tags:
+      name: 'csi processtransaction outbound'
+      integration: csi-processtransaction
+    destination_override_endpoint: '*'
+    entries:
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: Method
+            operator: equals
+            type: string
+            values:
+            - POST
+          rules: []
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values:
+            - /CSI_eCollections_Portal/ProcessingGateway.asmx
+          rules: []
+        - condition: null
+          expression:
+            field: ContentType
+            operator: begins_with
+            type: string
+            values:
+            - text/xml
+          rules: []
+      id_selector: null
+      operation: ENRICH
+      operations: null
+      phase: REQUEST
+      public_token_generator: PFPT
+      targets:
+      - body
+      token_manager: VOLATILE
+      transformer: XPATH
+      transformer_config:
+      - //processTransaction/xmlTransaction/TRANSACTION/CCNUMBER
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: Method
+            operator: equals
+            type: string
+            values:
+            - POST
+          rules: []
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values:
+            - /CSI_eCollections_Portal/ProcessingGateway.asmx
+          rules: []
+        - condition: null
+          expression:
+            field: ContentType
+            operator: begins_with
+            type: string
+            values:
+            - text/xml
+          rules: []
+      id_selector: null
+      operation: ENRICH
+      operations: null
+      phase: REQUEST
+      public_token_generator: UUID
+      targets:
+      - body
+      token_manager: VOLATILE
+      transformer: XPATH
+      transformer_config:
+      - //processTransaction/xmlTransaction/TRANSACTION/CVV2
+      transformer_config_map: null
+    - classifiers: {}
+      config:
+        condition: AND
+        expression: null
+        rules:
+        - condition: null
+          expression:
+            field: Method
+            operator: equals
+            type: string
+            values:
+            - POST
+          rules: []
+        - condition: null
+          expression:
+            field: PathInfo
+            operator: equals
+            type: string
+            values:
+            - /CSI_eCollections_Portal/ProcessingGateway.asmx
+          rules: []
+        - condition: null
+          expression:
+            field: ContentType
+            operator: begins_with
+            type: string
+            values:
+            - text/xml
+          rules: []
+      id_selector: null
+      operation: ENRICH
+      operations: null
+      phase: REQUEST
+      public_token_generator: UUID
+      targets:
+      - body
+      token_manager: VOLATILE
+      transformer: XPATH
+      transformer_config:
+      - //processTransaction/xmlTransaction/TRANSACTION/ACCOUNTNUMBER
+      transformer_config_map: null
+    host_endpoint: secure.collectorsolutions.com
+    port: 80
+    protocol: http
+    source_endpoint: '*'
+  type: rule_chain
+version: 1

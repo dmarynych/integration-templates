@@ -123,7 +123,7 @@ data:
       transformer: JSON_PATH
       transformer_config: [$.card_cvc]
       transformer_config_map: null
-    host_endpoint: (.*).verygoodproxy.io
+    host_endpoint: (.*)\.verygoodproxy\.com
     id: 00000000-0000-0000-0000-000000043242
     ordinal: null
     port: 0

@@ -43,7 +43,7 @@ data:
          operator: equals
          values: [application/json]
       condition: AND
-   host_endpoint: '(.*)\.verygoodproxy\.io'
+   host_endpoint: '(.*)\.verygoodproxy\.com'
    id: ec7ac6d4-7317-4031-ad5e-9160f1391ea1
    ordinal: null
    port: 80

@@ -1,0 +1,2 @@
+The processTransaction method provides a gateway through which CSI clients may process electronic check and credit card transactions.
+https://secure.collectorsolutions.com/CSI_eCollections_Portal/ProcessingGateway.asmx?op=processTransaction

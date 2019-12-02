@@ -1,0 +1,5 @@
+Mastercard signed SOAP request for Pan and Avv by revealing and removing the passed in headers `X-Keystore`, `X-Keystore-Pass`, `X-Keystore-Default-Alias`, and `X-Keystore-Private-Key-Pass`.
+
+- Redact the XPath entries /*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='getPurchaseRequestDetail']/*[local-name()='vcnInformation']/*[local-name()='Pan'] in the response
+- Redact the XPath entries /*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='getPurchaseRequestDetail']/*[local-name()='vcnInformation']/*[local-name()='Avv'] in the response
+- Reveal the XPath entries /*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='CreateVCNAuthsReportRequest']/@Pan, /*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='CreateVCNClearingsReportRequest']/@Pan in the request targets: body

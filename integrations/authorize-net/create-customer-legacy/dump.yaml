@@ -1,0 +1,82 @@
+data:
+ -
+  attributes:
+   tags:
+     name: 'create customer authorize.net legacy outbound'
+     integration: authorize.net-create-customer-legacy
+   destination_override_endpoint: '*'
+   entries:
+    -
+     phase: REQUEST
+     operation: ENRICH
+     token_manager: VOLATILE
+     public_token_generator: NUM_LENGTH_PRESERVING
+     transformer: XPATH
+     transformer_config:
+      - /Envelope/Body/CreateCustomerPaymentProfile/paymentProfile/payment/creditCard/cardCode
+     transformer_config_map: null
+     operations: null
+     targets:
+      - body
+     id_selector: null
+     classifiers: {}
+     config:
+      condition: AND
+      rules:
+       -
+        condition: null
+        rules: null
+        expression:
+         field: PathInfo
+         type: string
+         operator: equals
+         values: [/soap/v1/Service.asmx]
+       -
+        condition: null
+        rules: null
+        expression:
+         field: ContentType
+         type: string
+         operator: equals
+         values: ['text/xml; charset=utf-8']
+      expression: null
+    -
+     phase: REQUEST
+     operation: ENRICH
+     token_manager: PERSISTENT
+     public_token_generator: FPE_SIX_T_FOUR
+     transformer: XPATH
+     transformer_config:
+      - /Envelope/Body/CreateCustomerPaymentProfile/paymentProfile/payment/creditCard/cardNumber
+     transformer_config_map: null
+     operations: null
+     targets:
+      - body
+     id_selector: null
+     classifiers: {}
+     config:
+      condition: AND
+      rules:
+       -
+        condition: null
+        rules: null
+        expression:
+         field: PathInfo
+         type: string
+         operator: equals
+         values: [/soap/v1/Service.asmx]
+       -
+        condition: null
+        rules: null
+        expression:
+         field: ContentType
+         type: string
+         operator: equals
+         values: ['text/xml; charset=utf-8']
+      expression: null
+   host_endpoint: api\.authorize\.net|apitest\.authorize\.net
+   port: 443
+   protocol: http
+   source_endpoint: '*'
+  type: rule_chain
+version: 1

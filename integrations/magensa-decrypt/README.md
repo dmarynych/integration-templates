@@ -1,0 +1,1 @@
+For the Magensa Decrypt API, this yaml template can redact EMV data in `5A`, `57` TLV tags and `Track 1`, `Track 2` in `DecryptCardSwipe` SOAP response.
