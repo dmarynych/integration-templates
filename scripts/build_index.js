@@ -2,26 +2,34 @@ const fs = require('fs');
 const jsyaml = require('js-yaml');
 var ncp = require('ncp').ncp;
 
-const integrationsPath = './integrations';
+const integrationsPath = 'integrations';
 const distDir = './dist';
 
 run();
 
 async function run() {
   await copyIntegrations(distDir);
-  const index = buildIndex(`${distDir}/${integrationsPath}`);
-  fs.writeFileSync(`${toDir}/index.json`, JSON.stringify(index));  
+  const index = buildIndex(`${distDir}`);
+  fs.writeFileSync(`${distDir}/index.json`, JSON.stringify(index)); 
+
+  console.log(JSON.stringify(index, null, 2)); 
 }
 
-async function buildIndex(path) {
+function buildIndex(path) {
   const integrations = [];
   const dirs = fs.readdirSync(path);
+  
   dirs.forEach(dir => {
     const intDir = `${path}/${dir}`;  
+    
+    if(!fs.lstatSync(intDir).isDirectory()) {
+      return;
+    }
+
     const versionDir = fs.readdirSync(intDir).find(p => fs.lstatSync(`${intDir}/${p}`).isDirectory());
     const logoFile = fs.readdirSync(intDir).find(p => p.includes('logo'));
 
-    const dump = fs.readFileSync(`${intDir}/${versionDir}/dump.yaml`).toString();
+    // const dump = fs.readFileSync(`${intDir}/${versionDir}/dump.yaml`).toString();
 
     integrations.push({
       logoFile,
@@ -35,8 +43,6 @@ async function buildIndex(path) {
         }
       ]
     });
-
-    return integrations;
     // const routes = jsyaml.safeLoad(dump);
     // routes.data.forEach(route => {
     //   if(route.attributes.destination_override_endpoint === '*') {
@@ -52,6 +58,8 @@ async function buildIndex(path) {
 
     
   }); 
+
+  return integrations;
 }
 
 async function copyIntegrations(toDir) {
@@ -70,4 +78,3 @@ async function copyIntegrations(toDir) {
   });
 
 }
-console.log(JSON.stringify(integrations, null, 2));

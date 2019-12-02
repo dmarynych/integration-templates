@@ -5,3 +5,5 @@ stuff/modified_dump.yaml
 .idea/
 .vscode
 dist
+# Local Netlify folder
+.netlify
