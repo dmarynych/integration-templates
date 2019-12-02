@@ -5,6 +5,9 @@ const assert = require('assert');
 const integrationsPath = './integrations';
 const dirs = fs.readdirSync(integrationsPath);
 
+const routesWithoutName = [];
+const routesWithoutIntegration = [];
+
 dirs.forEach(dir => {
   const intDir = `${integrationsPath}/${dir}`;  
   const versionDir = fs.readdirSync(intDir).find(p => fs.lstatSync(`${intDir}/${p}`).isDirectory());
@@ -14,12 +17,20 @@ dirs.forEach(dir => {
   routes.data.forEach(route => {
     if(route.attributes.destination_override_endpoint === '*') {
       if(!route.attributes.tags.integration) {
-        throw new Error(`${dir} integration should have tags.integration field`);
+        routesWithoutIntegration.push(dir);
       }
     }
 
     if(!route.attributes.tags.name) {
-      throw new Error(`${dir}/${versionDir} integration should have tags.name field`);
+      routesWithoutName.push(`${dir}/${versionDir}`);
     }
   });
 });
+
+
+if(routesWithoutName.length) {  
+  throw new Error(`${routesWithoutName.join(', ')} integration should have tags.name field`);
+}
+if(routesWithoutIntegration.length) {
+  throw new Error(`${routesWithoutIntegration.join(', ')} integration should have tags.integration field`);
+}
