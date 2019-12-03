@@ -1,5 +1,5 @@
 const fs = require('fs');
-const jsyaml = require('js-yaml');
+const rimraf = require('rimraf');
 var ncp = require('ncp').ncp;
 
 const integrationsPath = 'integrations';
@@ -8,11 +8,13 @@ const distDir = './dist';
 run();
 
 async function run() {
+  rimraf.sync(distDir);
+
   await copyIntegrations(distDir);
   const index = buildIndex(`${distDir}`);
   fs.writeFileSync(`${distDir}/index.json`, JSON.stringify(index)); 
 
-  console.log(JSON.stringify(index, null, 2)); 
+  // console.log(JSON.stringify(index, null, 2)); 
 }
 
 function buildIndex(path) {
@@ -29,7 +31,11 @@ function buildIndex(path) {
     const versionDir = fs.readdirSync(intDir).find(p => fs.lstatSync(`${intDir}/${p}`).isDirectory());
     const logoFile = fs.readdirSync(intDir).find(p => p.includes('logo'));
 
-    // const dump = fs.readFileSync(`${intDir}/${versionDir}/dump.yaml`).toString();
+    if(process.env.NODE_ENV === 'development') {
+      let dump = fs.readFileSync(`${intDir}/${versionDir}/dump.yaml`).toString();
+      dump = dump.replace('(.*)\\.verygoodproxy\\.com', '(.*)\\.verygoodproxy\\.io');
+      fs.writeFileSync(`${intDir}/${versionDir}/dump.yaml`, dump);
+    }
 
     integrations.push({
       logoFile,
@@ -67,7 +73,9 @@ async function copyIntegrations(toDir) {
     if(!fs.existsSync(toDir)){
       fs.mkdirSync(toDir);
     }
-    
+
+    fs.copyFileSync('./src/utils/test-runner.js', `${toDir}/test-runner.js`);
+
     ncp(integrationsPath, toDir, function (err) {
       if (err) {
         reject(err);

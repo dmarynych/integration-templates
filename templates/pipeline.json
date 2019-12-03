@@ -1,0 +1,4 @@
+[
+  {"@type" : "type.googleapis.com/ProcessHttpBodyOperationConfig"},
+  {"@type" : "type.googleapis.com/JavascriptOperationConfig", "script" : "replaced: replacers/operation.js"}
+]

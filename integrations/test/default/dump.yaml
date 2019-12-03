@@ -1,0 +1,116 @@
+data:
+- attributes:
+   created_at: '2019-11-07T16:00:15'
+   destination_override_endpoint: 'https://echo.apps.verygood.systems'
+   entries:
+    -
+     id: e1e7abbe-496b-44fd-9f7b-1cab4048d799
+     phase: REQUEST
+     operation: REDACT
+     token_manager: PERSISTENT
+     public_token_generator: UUID
+     transformer: JSON_PATH
+     transformer_config:
+      - $.account_number
+     transformer_config_map: null
+     operations: [
+  {"@type" : "type.googleapis.com/ProcessHttpBodyOperationConfig"},
+  {"@type" : "type.googleapis.com/JavascriptOperationConfig", "script" : "replaced:operation.js"}
+]
+     targets:
+      - body
+     id_selector: null
+     classifiers: {}
+     config:
+      rules:
+       -
+        operator: matches
+        type: string
+        value: /post
+        field: PathInfo
+        condition: null
+        expression:
+         field: PathInfo
+         type: string
+         operator: matches
+         values: [/post]
+       -
+        operator: equals
+        type: string
+        value: application/json
+        field: ContentType
+        condition: null
+        expression:
+         field: ContentType
+         type: string
+         operator: equals
+         values: [application/json]
+      condition: AND
+   host_endpoint: '(.*)\.verygoodproxy\.com'
+   id: ec7ac6d4-7317-4031-ad5e-9160f1391ea1
+   ordinal: null
+   port: 80
+   protocol: http
+   source_endpoint: '*'
+   tags:
+    name:
+   updated_at: '2019-11-07T16:00:15'
+  id: ec7ac6d4-7317-4031-ad5e-9160f1391ea1
+  type: rule_chain
+- attributes:
+   created_at: '2019-11-07T16:00:33'
+   destination_override_endpoint: '*'
+   entries:
+    -
+     id: 44c56639-5705-49ad-a354-74efe365e5dc
+     phase: REQUEST
+     operation: ENRICH
+     token_manager: PERSISTENT
+     public_token_generator: UUID
+     transformer: JSON_PATH
+     transformer_config:
+      - $.account_number
+     transformer_config_map: null
+     operations: null
+     targets:
+      - body
+     id_selector: null
+     classifiers: {}
+     config:
+      rules:
+       -
+        operator: matches
+        type: string
+        value: /post
+        field: PathInfo
+        condition: null
+        expression:
+         field: PathInfo
+         type: string
+         operator: matches
+         values: [/post]
+       -
+        operator: equals
+        type: string
+        value: application/json
+        field: ContentType
+        condition: null
+        expression:
+         field: ContentType
+         type: string
+         operator: equals
+         values: [application/json]
+      condition: AND
+   host_endpoint: echo\.apps\.verygood\.systems
+   id: f3f7af03-4209-4d13-9b98-625096cfedb7
+   ordinal: null
+   port: 80
+   protocol: http
+   source_endpoint: '*'
+   tags:
+    name:
+    integration:
+   updated_at: '2019-11-07T16:00:33'
+  id: f3f7af03-4209-4d13-9b98-625096cfedb7
+  type: rule_chain
+version: 1

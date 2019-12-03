@@ -22,6 +22,7 @@
     "promptly": "^3.0.3",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
+    "rimraf": "^3.0.0",
     "url": "^0.11.0"
   },
   "devDependencies": {

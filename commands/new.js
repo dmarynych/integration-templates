@@ -1,7 +1,7 @@
-var ncp = require('ncp').ncp;
-const fs = require('fs'); 
+const ncp = require('ncp').ncp;
+const fs = require('fs');
 
-module.exports = async (name, version, program) => {
+module.exports = async (name, version, op = false) => {
   console.log('creating new integration', name, version);
 
   const mainDir = `integrations/${name}`;
@@ -16,8 +16,20 @@ module.exports = async (name, version, program) => {
 
   if (!isVersionExists) {
     await copyVersion(name, version);
+
+    if (op) {
+      const js = fs.readFileSync('./templates/js.js').toString();
+      const ops = fs.readFileSync('./templates/pipeline.json').toString();
+
+      let dump = fs.readFileSync('./templates/version/dump.yaml').toString();
+      dump = dump.replace('operations: null', `operations: ${ops}`);
+      fs.writeFileSync(`./${versionDir}/dump.yaml`, dump);
+
+      fs.mkdirSync(`./${versionDir}/replacers`);
+      fs.writeFileSync(`./${versionDir}/replacers/operation.js`, js);
+    }
   }
-}
+};
 
 function copyNew(name) {
   const source = `templates/integration`;
