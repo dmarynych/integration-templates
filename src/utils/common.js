@@ -1,12 +1,37 @@
 const path = require('path');
 const fs = require('fs');
+const jsyaml = require('js-yaml');
 
 const integrationRootDir = `${process.env.PWD}/integrations/`;
 const credsRootDir = `${process.env.PWD}/stuff/credentials/`;
 
 const getProxyType = (route) => route.destination_override_endpoint !== '*' ? 'inbound' : 'outbound';
 
-const getIntegrationVersions = (integrationName, integrationRootDir) => {
+const getIntegrationDump = (requestedIntegration, requestedIntegrationVersion) => {
+  const dump = jsyaml.safeLoad(
+    fs.readFileSync(`${integrationRootDir + requestedIntegration}/${requestedIntegrationVersion}/dump.yaml`),
+  );
+  return dump;
+};
+
+const replaceHostToDev = (host) => {
+  if (host.includes('verygoodproxy') && host.includes('.com')) {
+    host.replace('.com', '.io');
+  }
+
+  return host;
+};
+
+const rewriteDump = (requestedIntegration, requestedIntegrationVersion, dump) => {
+  const yaml = jsyaml.safeDump(dump);
+  fs.writeFileSync(
+    `${integrationRootDir + requestedIntegration}/${requestedIntegrationVersion}/dump.yaml`,
+    yaml,
+    { encoding: 'utf8' },
+  );
+};
+
+const getIntegrationVersions = (integrationName) => {
   const vList = {};
   fs.readdirSync(integrationRootDir + integrationName, { withFileTypes: true })
     .forEach((i) => {
@@ -24,7 +49,7 @@ const getIntegrationList = () => {
   fs.readdirSync(integrationRootDir, { withFileTypes: true })
     .forEach((i) => {
       if (i.isDirectory()) {
-        integrationList[i.name] = { name: i.name, versions: getIntegrationVersions(i.name, integrationRootDir) };
+        integrationList[i.name] = { name: i.name, versions: getIntegrationVersions(i.name) };
       }
     });
 
@@ -66,8 +91,8 @@ const clearDumpFiles = () => {
 const getConfig = (requestedIntegration) => {
   const config = JSON.parse(fs.readFileSync(`${integrationRootDir}${requestedIntegration}/config.json`));
   for (const variable in config.params) {
-    if (config.hasOwnProperty(variable)) {
-      process.env[variable] = config[variable];
+    if (config.params.hasOwnProperty(variable)) {
+      process.env[variable] = config.params[variable];
     }
   }
 };
@@ -98,6 +123,10 @@ function getCredentials() {
 // TODO set creds for tennant, check is there creds file with input tennant
 
 module.exports = {
+  integrationRootDir,
+  getIntegrationDump,
+  rewriteDump,
+  replaceHostToDev,
   getIntegrationList,
   getProxyType,
   checkIntegrationAndVersion,

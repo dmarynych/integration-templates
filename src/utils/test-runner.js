@@ -16,6 +16,10 @@ const configRunner = async () => {
     console.log('Missing tennantId, aborting');
     return;
   }
+
+  /**
+   * WARNING, if you are going to copy and paste this code - remove this line, it is applicable only for testing scenarios
+   */
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
   process.env.HTTPS_PROXT_AGENT_URL = `http://${process.env.vgs_username}:${process.env.vgs_password}@${process.env.tennantId}.sandbox.verygoodproxy.io:8080`;

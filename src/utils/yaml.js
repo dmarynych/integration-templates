@@ -6,54 +6,23 @@ const vgsCli = require('./vgs-cli');
 const cmn = require('./common');
 const log = require('./log');
 
-const dealWithYamlDumps = async (requestedIntegration, requestedIntegrationVersion, env) => {
-  try {
-    const dumpFile = fs.readFileSync(`${process.env.PWD}/stuff/dump.yaml`, 'utf8');
-    const dump = jsyaml.safeLoad(dumpFile);
-    const tplsDumpPath = `integrations/${requestedIntegration}/${requestedIntegrationVersion}/dump.yaml`;
-    let tplDump;
-
-    try {
-      tplDump = jsyaml.safeLoad(
-        fs.readFileSync(`${process.env.PWD}/${tplsDumpPath}`, 'utf8'),
-      );
-    } catch (e) {
-      log.logError('Failed to get template routes dump');
-      return;
+const inboundWorker = async (dump, tpl) => {
+  if (!_.isEmpty(dump) && _.get(tpl, 'id') !== dump.id) {
+    // route id differs from tpl id, show diff & ask rewrite
+    const shouldRewrite = tpl.destination_override_endpoint !== dump.destination_override_endpoint
+      ? await promptly.confirm('You already have inbound route, rewrite?(y/n):')
+      : true;
+    if (!_.isEmpty(tpl) && shouldRewrite) {
+      tpl.id = dump.id;
+      tpl.attributes.id = dump.id;
+      return tpl;
     }
-
-    const combined = await combine(dump, tplDump);
-    let parsedDump;
-
-    try {
-      parsedDump = jsyaml.safeDump(combined.packed);
-    } catch (e) {
-      log.logError('Parsed dump not valid, aborting \n', e);
-      process.exit();
-    }
-
-    try {
-      fs.writeFileSync(
-        `${process.env.PWD}/stuff/modified_dump.yaml`,
-        parsedDump,
-        { encoding: 'utf8' },
-      );
-    } catch (e) {
-      log.logError('Couldn\'t update dump file, aborting \n', e);
-      process.exit();
-    }
-
-    log.showDiff(combined);
-
-    if (await promptly.confirm(`You are going to update routes for ${log.colors.FgRed + cmn.getCredentials().tennantId + log.colors.FgDefault}. Are you sure about this?(y/n):`)) {
-      vgsCli.runSync('stuff/modified_dump.yaml', env);
-    }
-  } catch (e) {
-    log.logError(e);
+    return dump;
   }
+  return tpl;
 };
 
-const combine = async (dump, tpl) => {
+const combine = async (dump, tpl, env) => {
   if (!dump) {
     log.logError('dump is empty, aborting');
     process.exit();
@@ -68,6 +37,9 @@ const combine = async (dump, tpl) => {
 
   tpl.data.forEach((route) => {
     if (cmn.getProxyType(route.attributes) === 'inbound') {
+      if (env === 'dev') {
+        route.attributes.host_endpoint = cmn.replaceHostToDev(route.attributes.host_endpoint);
+      }
       combined.tpl.in = route;
     } else {
       combined.tpl.out[route.id] = route;
@@ -112,20 +84,54 @@ const combine = async (dump, tpl) => {
   return combined;
 };
 
-const inboundWorker = async (dump, tpl) => {
-  if (!_.isEmpty(dump) && _.get(tpl, 'id') !== dump.id) {
-    // route id differs from tpl id, show diff & ask rewrite
-    const shouldRewrite = tpl.destination_override_endpoint !== dump.destination_override_endpoint
-      ? await promptly.confirm('You already have inbound route, rewrite?(y/n):')
-      : true;
-    if (!_.isEmpty(tpl) && shouldRewrite) {
-      tpl.id = dump.id;
-      tpl.attributes.id = dump.id;
-      return tpl;
+const dealWithYamlDumps = async (requestedIntegration, requestedIntegrationVersion, options) => {
+  const { env } = options;
+  let { tplDump } = options;
+  try {
+    const dumpFile = fs.readFileSync(`${process.env.PWD}/stuff/dump.yaml`, 'utf8');
+    const dump = jsyaml.safeLoad(dumpFile);
+    const tplsDumpPath = `integrations/${requestedIntegration}/${requestedIntegrationVersion}/dump.yaml`;
+
+    if (!tplDump) {
+      try {
+        tplDump = jsyaml.safeLoad(
+          fs.readFileSync(`${process.env.PWD}/${tplsDumpPath}`, 'utf8'),
+        );
+      } catch (e) {
+        log.logError('Failed to get template routes dump');
+        return;
+      }
     }
-    return dump;
+
+    const combined = await combine(dump, tplDump, env);
+    let parsedDump;
+
+    try {
+      parsedDump = jsyaml.safeDump(combined.packed);
+    } catch (e) {
+      log.logError('Parsed dump not valid, aborting \n', e);
+      process.exit();
+    }
+
+    try {
+      fs.writeFileSync(
+        `${process.env.PWD}/stuff/modified_dump.yaml`,
+        parsedDump,
+        { encoding: 'utf8' },
+      );
+    } catch (e) {
+      log.logError('Couldn\'t update dump file, aborting \n', e);
+      process.exit();
+    }
+
+    log.showDiff(combined);
+
+    if (await promptly.confirm(`You are going to update routes for ${log.colors.FgRed + cmn.getCredentials().tennantId + log.colors.FgDefault}. Are you sure about this?(y/n):`)) {
+      vgsCli.runSync('stuff/modified_dump.yaml', env);
+    }
+  } catch (e) {
+    log.logError(e);
   }
-  return tpl;
 };
 
 module.exports = {

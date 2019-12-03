@@ -79,7 +79,7 @@ const showRouteDiff = (prev, next) => {
 
   const diff = deepDiff(prev, next);
   if (!prev || _.isEmpty(prev)) {
-    console.log('new route: ', next.id);
+    console.log('New route added: ', next.id);
     return;
   }
 

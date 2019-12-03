@@ -94,7 +94,7 @@ const runSync = async (tplsDumpPath, env) => {
 			logError('Stderr during run sync \n', stderr);
 		} else {
 			console.log('Success!');
-		}
+    }
     */
   });
 };

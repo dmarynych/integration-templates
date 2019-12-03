@@ -11,47 +11,47 @@ program.version(require('./package.json').version);
 
 
 program
-	.option('-d, --debug', 'output extra debugging');
+  .option('-d, --debug', 'output extra debugging');
 
 program
-	.command('new <name> [version]')
-	.description('Create a new template. For example "new visa v1" to kickstart new integration')
-	.action((name, version = 'default') => {
-		newCommand(name, version, program);
-	});
+  .command('new <name> [version]')
+  .description('Create a new template. For example "new visa v1" to kickstart new integration')
+  .action((name, version = 'default') => {
+    newCommand(name, version, program);
+  });
 
 program
-	.command('show')
-	.description('Show list of integrations')
-	.action(() => {
-		const integrationList = cmn.getIntegrationList();
-		log.show(integrationList);
-	});
+  .command('show')
+  .description('Show list of integrations')
+  .action(() => {
+    const integrationList = cmn.getIntegrationList();
+    log.show(integrationList);
+  });
 
 
 program
-	.command('apply <name> [version]')
-	.description('Apply integration. For example "apply visa v1" to save routes')
+  .command('apply <name> [version]')
+  .description('Apply integration. For example "apply visa v1" to save routes')
   .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
-	.action((name, version = 'default', cmd) => {
-		runner.runDumpAndSync(name, version, cmd.environment);
-	});
+  .action((name, version = 'default', cmd) => {
+    runner.runDumpAndSync(name, version, cmd.environment);
+  });
 
 program
-	.command('test <name> [version]')
-	.description('Test integration. For example "test visa v1" to test if it works')
+  .command('test <name> [version]')
+  .description('Test integration. For example "test visa v1" to test if it works')
   .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
-	.action((name, version = 'default') => {
-		runner.tryToRun(name, version);
-	});
+  .action((name, version = 'default') => {
+    runner.tryToRun(name, version);
+  });
 
 program
-	.command('dump')
-	.description('Dump routes, using creds file "stuff/credentials/creds.json"')
-	.requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
-	.action((cmd) => {
-		vgsCli.runDump(cmd.environment);
-	});
+  .command('dump')
+  .description('Dump routes, using creds file "stuff/credentials/creds.json"')
+  .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
+  .action((cmd) => {
+    vgsCli.runDump(cmd.environment);
+  });
 
 program
   .command('auth')
@@ -60,6 +60,20 @@ program
   .action((cmd) => {
     vgsCli.runAuth(cmd.environment);
     console.log(require('fs').readFileSync('./vgs-ascii').toString());
+  });
+
+program
+  .command('split <name> [version]')
+  .description('Split integration. For example "split visa v1" to split operations from yaml')
+  .action((name, version = 'default') => {
+    runner.splitPipeline(name, version);
+  });
+
+program
+  .command('pack <name> [version]')
+  .description('Pack integration. For example "pack visa v1" to pack operations to yaml')
+  .action((name, version = 'default') => {
+    runner.gatherPipeline(name, version, true);
   });
 
 program.parse(process.argv);
