@@ -18,7 +18,7 @@ npm install
 
 ## Create a new integration
 
-First, add credentials from your vault to `stuff/credentials/creds.json`, it should look like this:
+First, add credentials from your vault to `credentials/creds.json`, it should look like this:
 ```json
 {
   "username": "",

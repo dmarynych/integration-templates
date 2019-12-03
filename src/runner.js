@@ -5,7 +5,7 @@ const pipe = require('./utils/pipe');
 // eslint-disable-next-line no-unused-vars
 const testRunner = require('./utils/test-runner'); /* should be here for test-runner */
 
-const tryToRun = (requestedIntegration, requestedIntegrationVersion) => {
+const runTest = async (requestedIntegration, requestedIntegrationVersion) => {
   const creds = cmn.getCredentials();
   if (!cmn.checkIntegrationAndVersion(requestedIntegration, requestedIntegrationVersion)) return;
 
@@ -17,7 +17,7 @@ const tryToRun = (requestedIntegration, requestedIntegrationVersion) => {
     process.env.tennantId = creds.tennantId;
 
     // get config file and pass inners to process.env
-    cmn.getConfig(requestedIntegration, requestedIntegrationVersion);
+    await cmn.getConfig(requestedIntegration, requestedIntegrationVersion);
 
     require(`${integrationList[requestedIntegration].versions[requestedIntegrationVersion].path}/test`);
   }
@@ -57,7 +57,7 @@ const runDumpAndSync = async (requestedIntegration, requestedIntegrationVersion,
 };
 
 module.exports = {
-  tryToRun,
+  runTest,
   runDumpAndSync,
   splitPipeline,
   gatherPipeline,

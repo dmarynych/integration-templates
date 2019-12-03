@@ -10,9 +10,6 @@ const check = async () => {
 			card_expirationDate: '01 / 2022',
 			card_number: '4111111111111111',
 			card_cvc: '344',
-			smth: {
-				a: 123,
-			},
 		}),
 	};
 	const inboundResult = await global.testRunner.sendInbound(inboundRequestParams);

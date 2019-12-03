@@ -114,12 +114,12 @@ const gatherOperations = async (requestedIntegration, requestedIntegrationVersio
         const operations = eval(entry.operations);
 
         for (let i = 0; i < operations.length; i++) {
-          const { insertKeys, errors } = await insertOperationParam(operations[i], dir);
+          const { keys, errors } = await insertOperationParam(operations[i], dir);
           if (errors.length) {
             errors.forEach(e => errorsList.push(e));
           }
-          if (insertKeys) {
-            entry.operations = entry.operations.replace(...insertKeys);
+          if (keys) {
+            entry.operations = entry.operations.replace(...keys);
           }
         }
       }

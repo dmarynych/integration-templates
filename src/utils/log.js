@@ -74,22 +74,21 @@ const showDiff = (combined) => {
 };
 
 const showRouteDiff = (prev, next) => {
-  // const fieldsToIgnore = [ 'created_at', 'updated_at' ];
-  // fieldsToIgnore.includes(diff.path[diff.path.length-1]);
-
+  const fieldsToIgnore = ['created_at', 'updated_at'];
   const diff = deepDiff(prev, next);
+  const filteredDiff = diff && diff.filter(d => {
+    return !fieldsToIgnore.includes(d.path[d.path.length-1]);
+  });
+
   if (!prev || _.isEmpty(prev)) {
     console.log('New route added: ', next.id);
     return;
   }
 
-  console.log('diff for route: ', next.id);
-  if (!diff) {
-    console.log('No changes');
-    return;
-  }
+  if (!filteredDiff || !filteredDiff.length) return;
 
-  diff.forEach((i) => {
+  console.log('diff for route: ', next.id);
+  filteredDiff.forEach((i) => {
     console.log(
       colors.FgDefault,
       `${diffLabels[i.kind]}: ${i.path.join('.')}`,

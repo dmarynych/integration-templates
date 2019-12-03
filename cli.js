@@ -42,12 +42,12 @@ program
   .description('Test integration. For example "test visa v1" to test if it works')
   .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
   .action((name, version = 'default') => {
-    runner.tryToRun(name, version);
+    runner.runTest(name, version);
   });
 
 program
   .command('dump')
-  .description('Dump routes, using creds file "stuff/credentials/creds.json"')
+  .description('Dump routes, using creds file "credentials/creds.json"')
   .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
   .action((cmd) => {
     vgsCli.runDump(cmd.environment);

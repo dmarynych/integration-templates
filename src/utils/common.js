@@ -1,9 +1,11 @@
 const path = require('path');
 const fs = require('fs');
 const jsyaml = require('js-yaml');
+const promptly = require('promptly');
+const log = require('./log');
 
 const integrationRootDir = `${process.env.PWD}/integrations/`;
-const credsRootDir = `${process.env.PWD}/stuff/credentials/`;
+const credsRootDir = `${process.env.PWD}/credentials/`;
 
 const getProxyType = (route) => route.destination_override_endpoint !== '*' ? 'inbound' : 'outbound';
 
@@ -16,7 +18,7 @@ const getIntegrationDump = (requestedIntegration, requestedIntegrationVersion) =
 
 const replaceHostToDev = (host) => {
   if (host.includes('verygoodproxy') && host.includes('.com')) {
-    host.replace('.com', '.io');
+    return host.replace('.com', '.io');
   }
 
   return host;
@@ -88,11 +90,16 @@ const clearDumpFiles = () => {
   );
 };
 
-const getConfig = (requestedIntegration) => {
+const getConfig = async (requestedIntegration) => {
   const config = JSON.parse(fs.readFileSync(`${integrationRootDir}${requestedIntegration}/config.json`));
   for (const variable in config.params) {
     if (config.params.hasOwnProperty(variable)) {
       process.env[variable] = config.params[variable];
+      if (!config.params[variable]) {
+        console.log(`${variable} field is empty`);
+        process.env[variable] = await promptly
+          .prompt(`input below, or fill integrations/${requestedIntegration}/config.json and rerun\n`);
+      }
     }
   }
 };
@@ -102,7 +109,7 @@ const setCredentials = () => {
   fs.readdirSync(credsRootDir, { withFileTypes: true })
     .filter((f) => f.name.includes('credentials_'))
     .forEach((f) => credsList.push(f));
-  if (!credsList.length) { console.log('can\'t find credentials file, paste it to /stuff/credentials'); return; }
+  if (!credsList.length) { console.log('can\'t find credentials file, paste it to /credentials'); return; }
   console.log('taking credentials from ', credsList[0].name);
   const creds = fs.readFileSync(`${credsRootDir}/${credsList[0].name}`, 'utf8');
   const credsConfig = {
@@ -117,7 +124,14 @@ const setCredentials = () => {
 function getCredentials() {
   const crdsFile = fs.readFileSync(`${credsRootDir}/creds.json`, { encoding: 'utf8' });
   if (!crdsFile) { console.log('credentials and tenantId are missing, run set-creds'); return; }
-  return JSON.parse(crdsFile);
+  const crds = JSON.parse(crdsFile);
+
+  if (!crds.username || !crds.password || !crds.tennantId) {
+    log.logError('Credentials not valid, please fill vault credentials to /credentails/creds.json');
+    process.exit();
+  }
+
+  return crds;
 }
 
 // TODO set creds for tennant, check is there creds file with input tennant

@@ -70,7 +70,7 @@ const runDump = async (env) => {
   });
 };
 
-const runSync = async (tplsDumpPath, env) => {
+const runSync = async (tplsDumpPath, env, requestedIntegration, requestedIntegrationVersion) => {
   const creds = cmn.getCredentials();
   if (!creds.tennantId) {
     logError('Can\'t find tennantId, aborting');
@@ -83,11 +83,14 @@ const runSync = async (tplsDumpPath, env) => {
     if (err) {
       logError('Failed to run sync \n', err, stderr);
       if (await promptly.confirm('Retry?(y/n):')) {
-        runSync(tplsDumpPath, env);
+        runSync(tplsDumpPath, env, requestedIntegration, requestedIntegrationVersion);
       } else {
         process.exit();
       }
     }
+
+    console.log(' \nSuccess! Now try to run test for this integration if it is ready');
+    console.log(`./tool test ${requestedIntegration} ${requestedIntegrationVersion} -e ${env}`);
 
     /*
     if (stderr) {

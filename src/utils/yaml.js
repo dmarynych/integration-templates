@@ -125,7 +125,7 @@ const dealWithYamlDumps = async (requestedIntegration, requestedIntegrationVersi
     log.showDiff(combined);
 
     if (await promptly.confirm(`You are going to update routes for ${log.colors.FgRed + cmn.getCredentials().tennantId + log.colors.FgDefault}. Are you sure about this?(y/n):`)) {
-      vgsCli.runSync('stuff/modified_dump.yaml', env);
+      vgsCli.runSync('stuff/modified_dump.yaml', env, requestedIntegration, requestedIntegrationVersion);
     }
   } catch (e) {
     log.logError(e);
