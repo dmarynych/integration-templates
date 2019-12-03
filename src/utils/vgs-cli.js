@@ -19,7 +19,7 @@ const async_runDump = async (env) => {
     if (error) {
       logError('Failed to run dump \n', error);
       if (await promptly.confirm('Retry?(y/n):')) {
-        await async_runDump();
+        await async_runDump(env);
       } else {
         process.exit();
       }
@@ -35,7 +35,7 @@ const async_runDump = async (env) => {
   } catch (error) {
     logError('Failed to run dump \n', error);
     if (await promptly.confirm('Retry?(y/n):')) {
-      await async_runDump();
+      await async_runDump(env);
     } else {
       process.exit();
     }
@@ -54,7 +54,7 @@ const runDump = async (env) => {
     if (error) {
       logError('Failed to run dump \n', error);
       if (await promptly.confirm('Retry?(y/n):')) {
-        runDump();
+        runDump(env);
       } else {
         process.exit();
       }
@@ -83,7 +83,7 @@ const runSync = async (tplsDumpPath, env) => {
     if (err) {
       logError('Failed to run sync \n', err, stderr);
       if (await promptly.confirm('Retry?(y/n):')) {
-        runSync(tplsDumpPath);
+        runSync(tplsDumpPath, env);
       } else {
         process.exit();
       }

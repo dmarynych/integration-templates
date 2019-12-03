@@ -57,8 +57,6 @@ const combine = async (dump, tpl, env) => {
   if (combined.dump.in.id || combined.tpl.in.id) {
     combined.result.in = await inboundWorker(combined.dump.in, combined.tpl.in);
   }
-  // const inWorkerResult = await inboundWorker(combined.dump.in, combined.tpl.in);
-  // if (inWorkerResult) { combined.result.in = inWorkerResult; }
 
   for (const route in combined.dump.out) {
     if (combined.dump.out.hasOwnProperty(route)) {

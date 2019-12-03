@@ -104,3 +104,36 @@ Each integratio nshould have `config.json` file:
 }
 ```
 All variables stored in `params` are available in `process.env` object, you can use it in tests.
+
+
+
+### Replace operation pipeline
+Each integration with operation pipeline can be splitted with replacer files for debug.
+
+All mapped operation types (js) can be extracted to replacer files
+Simply put file with contents to /integrations/%INTEGRATION_NAME%/%INTEGRATION_VERSION%/replacers.
+```yml
+operations: |-
+            [ {
+              "@type" : "type.googleapis.com/JavascriptOperationConfig",
+              "script" : "const foo = bar;"
+            }]
+```
+with this:
+```yml
+operations: |-
+            [ {
+              "@type" : "type.googleapis.com/JavascriptOperationConfig",
+              "script" : "replaced:%FILE_NAME%"
+            }]
+```
+and create file in integration folder with this:
+Create file in integration folder with contents in /integrations/%INTEGRATION_NAME%/%INTEGRATION_VERSION%/replacers.
+```js
+const foo = bar;
+```
+
+Now running apply command will replace 'replaced:%filename%' keys in YAML dump with contents from replacers values before updating routes for vault, but will keep YAML file with 'replaced:' keys.
+```bash
+./tool apply integration version
+```

@@ -16,7 +16,7 @@ const operationsTypesMapping = {
 };
 
 const createPipelineFolders = (requestedIntegration, requestedIntegrationVersion) => {
-  const routeDir = `${cmn.integrationRootDir + requestedIntegration}/${requestedIntegrationVersion}/operations`;
+  const routeDir = `${cmn.integrationRootDir + requestedIntegration}/${requestedIntegrationVersion}/replacers`;
   if (!fs.existsSync(routeDir)) {
     fs.mkdirSync(routeDir);
   }
@@ -42,7 +42,7 @@ const extractOperationParam = (operation, idx, dir) => {
 };
 
 const extractOperations = (requestedIntegration, requestedIntegrationVersion, dump) => {
-  const dir = `${cmn.integrationRootDir + requestedIntegration}/${requestedIntegrationVersion}/operations`;
+  const dir = `${cmn.integrationRootDir + requestedIntegration}/${requestedIntegrationVersion}/replacers`;
 
   dump.data.map((route, rIdx) => {
     route.attributes.entries.map((entry, eIdx) => {
@@ -102,7 +102,7 @@ const insertOperationParam = async (operation, dir) => {
 };
 
 const gatherOperations = async (requestedIntegration, requestedIntegrationVersion, dump) => {
-  const dir = `${cmn.integrationRootDir + requestedIntegration}/${requestedIntegrationVersion}/operations`;
+  const dir = `${cmn.integrationRootDir + requestedIntegration}/${requestedIntegrationVersion}/replacers`;
   let errorsList = [];
 
   for (let r = 0; r < dump.data.length; r++) {
