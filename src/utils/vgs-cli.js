@@ -31,23 +31,6 @@ const async_runDump = async (env) => {
   if (p.stdout) {
     console.log(`log: ${p.stdout}`);
   }
-
-  // if (error) {
-  //   logError('Failed to run dump1 \n', error);
-  //   // if (await promptly.confirm('Retry?(y/n):')) {
-  //   //   await async_runDump(env);
-  //   // } else {
-  //   //   process.exit();
-  //   // }
-  // }
-  // } catch (error) {
-  //   logError('Failed to run dump2 \n', error);
-  //   // if (await promptly.confirm('Retry?(y/n):')) {
-  //   //   await async_runDump(env);
-  //   // } else {
-  //   //   process.exit();
-  //   // }
-  // }
 };
 
 const runDump = async (env) => {

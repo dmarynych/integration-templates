@@ -86,7 +86,7 @@ const insertOperationParam = async (operation, dir) => {
           } catch (e) {
             errors.push(`Smth went wrong with ${field.replace(replaceLabel, '')}\n ${e}`);
           }
-        }        
+        }
         value = value.replace(replaceRegexp, ' ');
 
         keys = [operation[param], value];
