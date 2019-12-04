@@ -107,11 +107,8 @@ const gatherOperations = async (requestedIntegration, requestedIntegrationVersio
 
   for (let r = 0; r < dump.data.length; r++) {
     let route = dump.data[r];
-    
     for (let e = 0; e < route.attributes.entries.length; e++) {
       let entry = route.attributes.entries[e];
-      console.log('entry.operations', entry.operations);
-      
       if (entry.operations && entry.operations.includes(replaceLabel)) {
         // eslint-disable-next-line no-eval
         const operations = eval(entry.operations);
