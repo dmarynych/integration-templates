@@ -4,41 +4,32 @@ const async_exec = util.promisify(require('child_process').exec);
 const promptly = require('promptly');
 const { logError } = require('./log');
 const cmn = require('./common');
+const { spawnSync } = require('child_process');
 
 const async_runDump = async (env) => {
-  try {
-    const creds = cmn.getCredentials();
-    if (!creds.tennantId) {
-      logError('Can\'t find tennantId, aborting');
-      process.exit();
-    }
-    const cmd = `vgs --environment=${env} --tenant=${creds.tennantId} route --dump-all > stuff/dump.yaml`;
-    console.log(cmd);
-    const { error, stdout, stderr } = await async_exec(cmd);
+  const creds = cmn.getCredentials();
+  if (!creds.tennantId) {
+    logError('Can\'t find tennantId, aborting');
+    process.exit();
+  }
 
-    if (error) {
-      logError('Failed to run dump \n', error);
-      if (await promptly.confirm('Retry?(y/n):')) {
-        await async_runDump(env);
-      } else {
-        process.exit();
-      }
-    }
+  const cmd = `--environment=${env} --tenant=${creds.tennantId} route --dump-all > stuff/dump.yaml`;
 
-    /*
-    if (stderr) {
-			logError('Stderr during run dump \n', stderr);
-		} else {
-			console.log('Success!');
-		}
-    */
-  } catch (error) {
-    logError('Failed to run dump \n', error);
-    if (await promptly.confirm('Retry?(y/n):')) {
-      await async_runDump(env);
+  const p = spawnSync('vgs', [cmd], { shell: true });
+
+  if (p.stderr) {
+    const error = p.stderr.toString();
+    if (error.includes('Authentication error') || error.includes('authenticate')) {
+      console.error(`Auth error. Run "./tool auth --environment ${env}" to authenticate`);
     } else {
-      process.exit();
+      console.error(1, error);
     }
+
+    if (error) process.exit();
+  }
+
+  if (p.stdout) {
+    console.log(`log: ${p.stdout}`);
   }
 };
 

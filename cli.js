@@ -15,9 +15,10 @@ program
 
 program
   .command('new <name> [version]')
+  .option('-o, --operation-pipeline', 'Integration with operations pipeline example')
   .description('Create a new template. For example "new visa v1" to kickstart new integration')
-  .action((name, version = 'default') => {
-    newCommand(name, version, program);
+  .action((name, version = 'default', cmd) => {
+    newCommand(name, version, cmd.operationPipeline);
   });
 
 program

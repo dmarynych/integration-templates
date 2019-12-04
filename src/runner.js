@@ -34,6 +34,7 @@ const splitPipeline = async (requestedIntegration, requestedIntegrationVersion) 
 };
 
 const gatherPipeline = async (requestedIntegration, requestedIntegrationVersion, shouldRewrite) => {
+  
   if (!cmn.checkIntegrationAndVersion(requestedIntegration, requestedIntegrationVersion)) return;
 
   let dump = cmn.getIntegrationDump(requestedIntegration, requestedIntegrationVersion);

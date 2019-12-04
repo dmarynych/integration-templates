@@ -43,7 +43,7 @@ jobs:
           - v1-dependencies-
       - run: npm install
       - run: node scripts/build_index.js
-      - run: NETLIFY_AUTH_TOKEN=$NETLIFY_TOKEN ./node_modules/netlify-cli/bin/run deploy --prod --site cb7f3d81-8d3f-47d6-b58b-1aa58a1b8792
+      - run: NODE_ENV=development NETLIFY_AUTH_TOKEN=$NETLIFY_TOKEN ./node_modules/netlify-cli/bin/run deploy --prod --site cb7f3d81-8d3f-47d6-b58b-1aa58a1b8792
 
 
   testcafe:
