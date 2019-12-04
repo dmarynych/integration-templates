@@ -34,13 +34,17 @@ const splitPipeline = async (requestedIntegration, requestedIntegrationVersion) 
 };
 
 const gatherPipeline = async (requestedIntegration, requestedIntegrationVersion, shouldRewrite) => {
+  console.log(1);
+  
   if (!cmn.checkIntegrationAndVersion(requestedIntegration, requestedIntegrationVersion)) return;
+console.log(2);
 
   let dump = cmn.getIntegrationDump(requestedIntegration, requestedIntegrationVersion);
   dump = await pipe.gatherOperations(requestedIntegration, requestedIntegrationVersion, dump);
   if (shouldRewrite) {
     await cmn.rewriteDump(requestedIntegration, requestedIntegrationVersion, dump);
   }
+console.log(3);
 
   return dump;
 };

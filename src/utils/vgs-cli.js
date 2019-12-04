@@ -19,10 +19,10 @@ const async_runDump = async (env) => {
 
   if (p.stderr) {
     const error = p.stderr.toString();
-    if (error.includes('Authentication error')) {
+    if (error.includes('Authentication error') || error.includes('authenticate')) {
       console.error(`Auth error. Run "./tool auth --environment ${env}" to authenticate`);
     } else {
-      console.error(error);
+      console.error(1, error);
     }
 
     if (error) process.exit();

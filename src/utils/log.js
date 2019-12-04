@@ -62,7 +62,7 @@ const showDiff = (combined) => {
     process.exit();
   }
 
-  if (!_.isEmpty(combined.result.in)) {    
+  if (!_.isEmpty(combined.result.in)) {
     showRouteDiff(combined.dump.in, combined.result.in);
   }
 
@@ -74,39 +74,33 @@ const showDiff = (combined) => {
 };
 
 const showRouteDiff = (prev, next) => {
-  try {
-    const fieldsToIgnore = ['created_at', 'updated_at'];
-    const diff = deepDiff(prev, next);
-    const filteredDiff = diff && diff.filter(d => {    
-      return !fieldsToIgnore.includes(d.path[d.path.length-1]);
-    });
-  
-    if (!prev || _.isEmpty(prev)) {
-      console.log('New route added: ', next.id);
-      return;
-    }
-  
-    if (!filteredDiff) return;
-    if (!filteredDiff.length) return;
-  
-    console.log('diff for route: ', next.id);
-    filteredDiff.forEach((i) => {
-      console.log(
-        colors.FgDefault,
-        `${diffLabels[i.kind]}: ${i.path.join('.')}`,
-      );
-      console.log(
-        colors.FgRed,
-        i.lhs,
-        colors.FgGreen,
-        i.rhs,
-      );
-    });
-    console.log(colors.FgDefault);
-  } catch (e) {
-    console.log('diff err', e);
+  const fieldsToIgnore = ['created_at', 'updated_at'];
+  const diff = deepDiff(prev, next);
+  const filteredDiff = diff && diff.filter(d => {
+    return d.path && !fieldsToIgnore.includes(d.path[d.path.length-1]);
+  });
+
+  if (!prev || _.isEmpty(prev)) {
+    console.log('New route added: ', next.id);
+    return;
   }
 
+  if (!filteredDiff || !filteredDiff.length) return;
+
+  console.log('diff for route: ', next.id);
+  filteredDiff.forEach((i) => {
+    console.log(
+      colors.FgDefault,
+      `${diffLabels[i.kind]}: ${i.path.join('.')}`,
+    );
+    console.log(
+      colors.FgRed,
+      i.lhs,
+      colors.FgGreen,
+      i.rhs,
+    );
+  });
+  console.log(colors.FgDefault);
 };
 
 module.exports = {

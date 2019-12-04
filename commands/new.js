@@ -22,7 +22,7 @@ module.exports = async (name, version, op = false) => {
       const ops = fs.readFileSync('./templates/pipeline.json').toString();
 
       let dump = fs.readFileSync('./templates/version/dump.yaml').toString();
-      dump = dump.replace('operations: null', `operations: ${ops}`);
+      dump = dump.replace('operations: null', `operations: |-${ops}`);
       fs.writeFileSync(`./${versionDir}/dump.yaml`, dump);
 
       fs.mkdirSync(`./${versionDir}/replacers`);
