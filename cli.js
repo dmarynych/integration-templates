@@ -33,25 +33,25 @@ program
 program
   .command('apply <name> [version]')
   .description('Apply integration. For example "apply visa v1 -e sandbox" to save routes')
-  .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
-  .action((name, version = 'default', cmd) => {
-    runner.runDumpAndSync(name, version, cmd.environment);
+  .option('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
+  .action((name, version = 'default', { environment = 'sandbox' }) => {
+    runner.runDumpAndSync(name, version, environment);
   });
 
 program
   .command('test <name> [version]')
   .description('Test integration. For example "test visa v1 -e sandbox" to test if it works')
-  .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
-  .action((name, version = 'default', cmd) => {
-    runner.runTest(name, version, cmd.environment);
+  .option('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
+  .action((name, version = 'default', { environment = 'sandbox' }) => {
+    runner.runTest(name, version, environment);
   });
 
 program
   .command('dump')
   .description('Dump routes, using creds file "credentials/creds.json"')
   .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
-  .action((cmd) => {
-    vgsCli.async_runDump(cmd.environment, cmd.current);
+  .action(({ environment = 'sandbox' }) => {
+    vgsCli.async_runDump(environment);
   });
 
 program

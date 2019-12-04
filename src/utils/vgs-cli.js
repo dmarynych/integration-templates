@@ -81,8 +81,9 @@ const runSync = async (tplsDumpPath, env, requestedIntegration, requestedIntegra
       }
     }
 
-    console.log(' \nSuccess! Now try to run test for this integration if it is ready');
-    console.log(`./tool test ${requestedIntegration} ${requestedIntegrationVersion} -e ${env}`);
+    console.log(`\nSuccess! Now try to run test for this integration if it is ready
+for example "./tool test ${requestedIntegration} ${requestedIntegrationVersion} ${env !== 'sandbox' && `-e ${env}`}"
+# how to write tests: https://github.com/verygoodsecurity/integration-templates#writing-tests`);
 
     /*
     if (stderr) {
@@ -104,6 +105,10 @@ const runAuth = async (env) => {
         process.exit();
       }
     }
+
+    console.log(`\nSuccess! Now try to create new integration
+for example "./tool new MyGreatIntegration version}"
+# how to: https://github.com/verygoodsecurity/integration-templates#create-a-new-integration`);
 
     /*
     if(stderr) {
