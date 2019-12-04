@@ -107,7 +107,7 @@ All variables stored in `params` are available in `process.env` object, you can 
 
 
 
-### Replace operation pipeline
+## Operation pipeline
 Each integration with operation pipeline can be splitted with replacer files for debug.
 
 You can start with default template, by running:
