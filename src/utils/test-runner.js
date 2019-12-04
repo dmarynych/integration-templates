@@ -2,6 +2,7 @@ const _ = require('lodash');
 const https = require('https'); /* should be here for RunKit */
 const HttpsProxyAgent = require('https-proxy-agent');
 const fetch = require('node-fetch');
+const assert = require('assert');
 
 const configRunner = async () => {
   if (!process.env.vgs_username) {
@@ -75,9 +76,24 @@ const sendOutbound = async (config) => {
   }
 };
 
+const proxyAssert = new Proxy(assert, {
+  get(target, propKey) {
+    const origMethod = target[propKey];
+    if (!origMethod) return;
+    return function (...args) {
+      try {
+        origMethod.apply(this, args);
+      } catch (e) {
+        console.log('\x1b[31m', `assert.${propKey} call  with arguments ${args} failed`, '\x1b[39m');
+      }
+    };
+  },
+});
+
 /* for dashboard */
 global.testRunner = {
   configRunner,
   sendInbound,
   sendOutbound,
+  assert: proxyAssert,
 };
