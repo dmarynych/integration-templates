@@ -1,5 +1,3 @@
-const assert = require('assert');
-
 const check = async () => {
   global.testRunner.configRunner();
 
@@ -16,7 +14,7 @@ const check = async () => {
   const inboundResult = await global.testRunner.sendInbound(inboundRequestParams);
   const inboundResponse = JSON.parse(inboundResult.data);
 
-  assert.notEqual(sampleAccNumber, inboundResponse.account_number);
+  global.testRunner.proxyAssert.notEqual(sampleAccNumber, inboundResponse.account_number);
 
   // should send redacted test data from proxy to 3rd party API
   const outboundPayload = `{"account_number":"${inboundResponse.account_number}"}`;
@@ -32,7 +30,7 @@ const check = async () => {
   const response = JSON.parse(outboundResponse);
   const data = JSON.parse(response.data);
 
-  assert.equal(sampleAccNumber, data.account_number);
+  global.testRunner.proxyAssert.equal(sampleAccNumber, data.account_number);
 };
 
 check();

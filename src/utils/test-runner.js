@@ -95,5 +95,5 @@ global.testRunner = {
   configRunner,
   sendInbound,
   sendOutbound,
-  assert: proxyAssert,
+  proxyAssert,
 };
