@@ -18,4 +18,5 @@ module.exports = {
 		"no-console": "off",
 		"no-confusing-arrow": "off"//["error", {"allowParens": true}]
   },
+  "ignorePatterns": ["templates/"],
 };
