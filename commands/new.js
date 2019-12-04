@@ -47,7 +47,6 @@ function copyNew(name) {
         console.error(err);
         reject(err);
       }
-      // console.log(`Integration ${name} is created! Go to ${destination} folder and check it.`);
       resolve();
     });
   });
@@ -63,7 +62,6 @@ function copyVersion(name, version) {
         console.error(err);
           reject(err);
       }
-      // console.log(`Integration ${name}/${version} is created! Go to ${destination} folder and check it.`);
       resolve();
     });
   });
