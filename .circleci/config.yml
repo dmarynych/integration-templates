@@ -27,8 +27,8 @@ jobs:
           - v1-dependencies-{{ checksum "package.json" }}
           - v1-dependencies-
       - run: npm install
-      - run: node scripts/build_index.js
-      - run: NODE_ENV=production NETLIFY_AUTH_TOKEN=$NETLIFY_TOKEN ./node_modules/netlify-cli/bin/run deploy --prod --site 1c8786fb-bd1f-42f6-908b-2c37901bada9
+      - run: NODE_ENV=production node scripts/build_index.js
+      - run: NETLIFY_AUTH_TOKEN=$NETLIFY_TOKEN ./node_modules/netlify-cli/bin/run deploy --prod --site 1c8786fb-bd1f-42f6-908b-2c37901bada9
 
   deploy-dev:
     docker:
@@ -42,8 +42,8 @@ jobs:
           - v1-dependencies-{{ checksum "package.json" }}
           - v1-dependencies-
       - run: npm install
-      - run: node scripts/build_index.js
-      - run: NODE_ENV=development NETLIFY_AUTH_TOKEN=$NETLIFY_TOKEN ./node_modules/netlify-cli/bin/run deploy --prod --site cb7f3d81-8d3f-47d6-b58b-1aa58a1b8792
+      - run: NODE_ENV=development node scripts/build_index.js
+      - run: NETLIFY_AUTH_TOKEN=$NETLIFY_TOKEN ./node_modules/netlify-cli/bin/run deploy --prod --site cb7f3d81-8d3f-47d6-b58b-1aa58a1b8792
 
 
   testcafe:
