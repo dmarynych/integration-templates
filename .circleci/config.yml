@@ -102,5 +102,4 @@ workflows:
             tags:
               only: /production-.+/
             branches:
-              # Forked pull requests have CIRCLE_BRANCH set to pull/XXX
-              ignore: /pull\/[0-9]+/
+              ignore: /.*/
