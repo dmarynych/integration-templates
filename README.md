@@ -31,7 +31,7 @@ First, add credentials from your vault to `credentials/creds.json`, it should lo
 
 Then, authenticate:
 ```bash
-./tool auth -e dev
+./tool auth
 
 ```
 
