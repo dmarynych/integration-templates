@@ -29,8 +29,11 @@ module.exports = async (name, version, op = false) => {
       fs.writeFileSync(`./${versionDir}/replacers/operation.js`, js);
     }
 
-    console.log(`\nSuccess! Now apply it to your vault
-for example "./tool apply ${name} ${version}`);
+    console.log('Success!');
+    console.log(`Now, you can edit test - ./integrations/${name}/${version}/test.js`);
+    console.log(`And routes dump file - ./integrations/${name}/${version}/dump.yaml`);
+    console.log(`\nNow apply it to your vault
+for example "./tool apply ${name} ${version}"`);
   }
 };
 
@@ -44,7 +47,6 @@ function copyNew(name) {
         console.error(err);
         reject(err);
       }
-      console.log(`Integration ${name} is created! Go to ${destination} folder and check it.`);
       resolve();
     });
   });
@@ -60,7 +62,6 @@ function copyVersion(name, version) {
         console.error(err);
           reject(err);
       }
-      console.log(`Integration ${name}/${version} is created! Go to ${destination} folder and check it.`);
       resolve();
     });
   });

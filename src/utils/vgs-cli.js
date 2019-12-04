@@ -21,7 +21,7 @@ const async_runDump = async (env) => {
     if (error.includes('Authentication error') || error.includes('authenticate')) {
       console.error(`Auth error. Run "./tool auth --environment ${env}" to authenticate`);
     } else {
-      console.error(1, error);
+      console.error(error);
     }
 
     if (error) process.exit();
@@ -82,16 +82,8 @@ const runSync = async (tplsDumpPath, env, requestedIntegration, requestedIntegra
     }
 
     console.log(`\nSuccess! Now try to run test for this integration if it is ready
-for example "./tool test ${requestedIntegration} ${requestedIntegrationVersion} ${env !== 'sandbox' && `-e ${env}`}"
+for example "./tool test ${requestedIntegration} ${requestedIntegrationVersion}${env !== 'sandbox' ? ` -e ${env}` : ''}"
 # how to write tests: https://github.com/verygoodsecurity/integration-templates#writing-tests`);
-
-    /*
-    if (stderr) {
-			logError('Stderr during run sync \n', stderr);
-		} else {
-			console.log('Success!');
-    }
-    */
   });
 };
 
@@ -107,7 +99,7 @@ const runAuth = async (env) => {
     }
 
     console.log(`\nSuccess! Now try to create new integration
-for example "./tool new MyGreatIntegration version}"
+for example "./tool new MyGreatIntegration"
 # how to: https://github.com/verygoodsecurity/integration-templates#create-a-new-integration`);
 
     /*

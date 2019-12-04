@@ -127,7 +127,7 @@ function getCredentials() {
   const crds = JSON.parse(crdsFile);
 
   if (!crds.username || !crds.password || !crds.tennantId) {
-    log.logError('Credentials not valid, please fill vault credentials to /credentails/creds.json');
+    console.log("Credentials not valid, please fill vault credentials to ./credentials/creds.json");
     process.exit();
   }
 
