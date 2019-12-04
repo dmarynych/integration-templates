@@ -77,7 +77,7 @@ const showRouteDiff = (prev, next) => {
   const fieldsToIgnore = ['created_at', 'updated_at'];
   const diff = deepDiff(prev, next);
   const filteredDiff = diff && diff.filter(d => {
-    return !fieldsToIgnore.includes(d.path[d.path.length-1]);
+    return d.path && !fieldsToIgnore.includes(d.path[d.path.length-1]);
   });
 
   if (!prev || _.isEmpty(prev)) {
