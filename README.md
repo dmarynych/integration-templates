@@ -110,6 +110,11 @@ All variables stored in `params` are available in `process.env` object, you can 
 ### Replace operation pipeline
 Each integration with operation pipeline can be splitted with replacer files for debug.
 
+You can start with default template, by running:
+```bash
+./tool new echo -o
+```
+
 All mapped operation types (js) can be extracted to replacer files
 Simply put file with contents to /integrations/%INTEGRATION_NAME%/%INTEGRATION_VERSION%/replacers.
 ```yml
