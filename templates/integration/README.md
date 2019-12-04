@@ -1,1 +1,1 @@
-Utilize Stripe's APIs without storing payment card data.
+Sample integration with echo server
