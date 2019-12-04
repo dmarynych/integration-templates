@@ -32,7 +32,7 @@ program
 
 program
   .command('apply <name> [version]')
-  .description('Apply integration. For example "apply visa v1" to save routes')
+  .description('Apply integration. For example "apply visa v1 -e sandbox" to save routes')
   .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
   .action((name, version = 'default', cmd) => {
     runner.runDumpAndSync(name, version, cmd.environment);
@@ -40,10 +40,10 @@ program
 
 program
   .command('test <name> [version]')
-  .description('Test integration. For example "test visa v1" to test if it works')
+  .description('Test integration. For example "test visa v1 -e sandbox" to test if it works')
   .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
-  .action((name, version = 'default') => {
-    runner.runTest(name, version);
+  .action((name, version = 'default', cmd) => {
+    runner.runTest(name, version, cmd.environment);
   });
 
 program
@@ -51,15 +51,15 @@ program
   .description('Dump routes, using creds file "credentials/creds.json"')
   .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
   .action((cmd) => {
-    vgsCli.runDump(cmd.environment);
+    vgsCli.async_runDump(cmd.environment, cmd.current);
   });
 
 program
   .command('auth')
   .description('Auth on VGS')
-  .requiredOption('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
-  .action((cmd) => {
-    vgsCli.runAuth(cmd.environment);
+  .option('-e, --environment <environment>', 'VGS environment, might be "dev", "sandbox"')
+  .action(({ environment = 'sandbox' }) => {
+    vgsCli.runAuth(environment);
     console.log(require('fs').readFileSync('./vgs-ascii').toString());
   });
 

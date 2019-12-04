@@ -5,7 +5,7 @@ const pipe = require('./utils/pipe');
 // eslint-disable-next-line no-unused-vars
 const testRunner = require('./utils/test-runner'); /* should be here for test-runner */
 
-const runTest = async (requestedIntegration, requestedIntegrationVersion) => {
+const runTest = async (requestedIntegration, requestedIntegrationVersion, env) => {
   const creds = cmn.getCredentials();
   if (!cmn.checkIntegrationAndVersion(requestedIntegration, requestedIntegrationVersion)) return;
 
@@ -15,6 +15,7 @@ const runTest = async (requestedIntegration, requestedIntegrationVersion) => {
     process.env.vgs_username = creds.username;
     process.env.vgs_password = creds.password;
     process.env.tennantId = creds.tennantId;
+    process.env.tool_test_env = env;
 
     // get config file and pass inners to process.env
     await cmn.getConfig(requestedIntegration, requestedIntegrationVersion);

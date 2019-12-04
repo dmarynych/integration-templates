@@ -1,6 +1,5 @@
 const { exec } = require('child_process');
 const util = require('util');
-const async_exec = util.promisify(require('child_process').exec);
 const promptly = require('promptly');
 const { logError } = require('./log');
 const cmn = require('./common');
@@ -33,13 +32,14 @@ const async_runDump = async (env) => {
   }
 };
 
-const runDump = async (env) => {
+const runDump = async (env, isCurrent) => {
   const creds = cmn.getCredentials();
+  const dir = isCurrent ? 'current' : 'stuff';
   if (!creds.tennantId) {
     logError('Can\'t find tennantId, aborting');
     process.exit();
   }
-  const cmd = `vgs --environment=${env} --tenant=${creds.tennantId} route --dump-all > stuff/dump.yaml`;
+  const cmd = `vgs --environment=${env} --tenant=${creds.tennantId} route --dump-all > ${dir}/dump.yaml`;
   console.log(cmd);
   exec(cmd, async (error, stdout, stderr) => {
     if (error) {
@@ -75,6 +75,7 @@ const runSync = async (tplsDumpPath, env, requestedIntegration, requestedIntegra
       logError('Failed to run sync \n', err, stderr);
       if (await promptly.confirm('Retry?(y/n):')) {
         runSync(tplsDumpPath, env, requestedIntegration, requestedIntegrationVersion);
+        return;
       } else {
         process.exit();
       }

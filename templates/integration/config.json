@@ -1,6 +1,4 @@
 {
-  "params": {
-    "secret_key": ""
-  },
+  "params": {},
   "category": "Category name"
 }

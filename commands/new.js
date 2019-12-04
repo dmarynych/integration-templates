@@ -28,6 +28,10 @@ module.exports = async (name, version, op = false) => {
       fs.mkdirSync(`./${versionDir}/replacers`);
       fs.writeFileSync(`./${versionDir}/replacers/operation.js`, js);
     }
+
+    console.log(`\nSuccess! Now try to run test for this integration if it is ready
+for example "./tool test ${name} ${version} -e "
+# how to write tests: https://github.com/verygoodsecurity/integration-templates#writing-tests`);
   }
 };
 

@@ -22,13 +22,14 @@ const configRunner = async () => {
    */
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-  process.env.HTTPS_PROXT_AGENT_URL = `http://${process.env.vgs_username}:${process.env.vgs_password}@${process.env.tennantId}.sandbox.verygoodproxy.io:8080`;
+  process.env.HTTPS_PROXT_AGENT_URL = `http://${process.env.vgs_username}:${process.env.vgs_password}@${process.env.tennantId}.sandbox.verygoodproxy.${process.env.tool_test_env === 'dev' ? 'io' : 'com'}:8080`;
 };
 
 
 const sendInbound = async (config) => {
+
   try {
-    const response = await fetch(config.url || `https://${process.env.tennantId}.SANDBOX.verygoodproxy.io/post`, {
+    const response = await fetch(config.url || `https://${process.env.tennantId}.SANDBOX.verygoodproxy.${process.env.tool_test_env === 'dev' ? 'io' : 'com'}/post`, {
       method: config.method,
       headers: config.headers,
       body: config.body,
