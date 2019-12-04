@@ -1,0 +1,106 @@
+data:
+ -
+  attributes:
+   destination_override_endpoint: 'https://echo.apps.verygood.systems'
+   entries:
+    -
+     id: 7abed389-405c-4a67-bd7f-d047754dd9b0
+     phase: REQUEST
+     operation: REDACT
+     token_manager: PERSISTENT
+     public_token_generator: UUID
+     transformer: JSON_PATH
+     transformer_config:
+      - $.account_number
+     transformer_config_map: null
+     operations: null
+     targets:
+      - body
+     id_selector: null
+     classifiers: {}
+     config:
+      rules:
+       -
+        operator: equals
+        type: string
+        value: /post
+        field: PathInfo
+        condition: null
+        expression:
+         field: PathInfo
+         type: string
+         operator: equals
+         values: [/post]
+       -
+        operator: equals
+        type: string
+        value: application/json
+        field: ContentType
+        condition: null
+        expression:
+         field: ContentType
+         type: string
+         operator: equals
+         values: [application/json]
+      condition: AND
+   host_endpoint: '(.*)\.verygoodproxy\.io'
+   id: a4115120-3903-4a4a-ab90-5b682316e276
+   ordinal: null
+   port: 0
+   protocol: http
+   source_endpoint: '*'
+   tags:
+    name: 'https://echo.apps.verygood.systems-deep-pink-outrigger'
+  id: a4115120-3903-4a4a-ab90-5b682316e276
+  type: rule_chain
+ -
+  attributes:
+   destination_override_endpoint: '*'
+   entries:
+    -
+     id: 69b5149d-fba2-4b6d-9c2b-a1728b4f6d49
+     phase: REQUEST
+     operation: ENRICH
+     token_manager: PERSISTENT
+     public_token_generator: UUID
+     transformer: JSON_PATH
+     transformer_config:
+      - $.account_number
+     transformer_config_map: null
+     operations: null
+     targets:
+      - body
+     id_selector: null
+     classifiers: {}
+     config:
+      condition: AND
+      rules:
+       -
+        condition: null
+        rules: null
+        expression:
+         field: PathInfo
+         type: string
+         operator: equals
+         values: [/post]
+       -
+        condition: null
+        rules: null
+        expression:
+         field: ContentType
+         type: string
+         operator: equals
+         values: [application/json]
+      expression: null
+   host_endpoint: echo\.apps\.verygood\.systems
+   id: 386e8c46-7701-416e-9106-8ba4308a09ab
+   ordinal: null
+   port: 443
+   protocol: http
+   source_endpoint: '*'
+   tags:
+    name: echo
+    integration: echo
+  id: 386e8c46-7701-416e-9106-8ba4308a09ab
+  type: rule_chain
+version: 1
