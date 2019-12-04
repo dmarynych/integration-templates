@@ -100,7 +100,7 @@ Each integratio nshould have `config.json` file:
   "params": {
     "authToken": ""
   },
-  "category": "Payment Processors"
+  "category": "Payment Services"
 }
 ```
 All variables stored in `params` are available in `process.env` object, you can use it in tests.
