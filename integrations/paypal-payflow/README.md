@@ -1,2 +1,0 @@
-Send field name `ACCT` for the buyer's credit card number and include additional name-value fields for the request. The JavaScript operations will re-compute the field lengths with the updated credit card number length.
-https://developer.paypal.com/docs/classic/payflow/gs_payflow/#make-your-first-call
